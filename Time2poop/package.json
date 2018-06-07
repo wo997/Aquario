@@ -9,4 +9,7 @@
   },
   "author": "wo997",
   "license": "ISC"
+  "engines": {
+    "node": "4.1.1"
+  }
 }
