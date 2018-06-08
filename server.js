@@ -1,9 +1,7 @@
-const fs = require('fs');
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http); //bilbio do socketa - nmp install --save socket.io
-const url = require('url');
 
 app.get('/', function(req, res){ //ładuje index.html zamiast domyślnie
   res.sendFile(__dirname + '/htdocs/index.html');
@@ -44,7 +42,7 @@ function randomizeBottom()
 	BOTTOM = [Math.random()-0.5];
 	
 	var vel = 0;
-	for (x=1;x<BOUNDRIGHT/BOTTOMSIZE;x++)
+	for (x=1;x<BOUNDRIGHT/BOTTOMSIZE+2;x++)
 	{
 		vel = 0.99*vel + pseudoRandom(x);
 		BOTTOM.push((BOTTOM[x-1] + vel) * 0.5);
@@ -52,7 +50,7 @@ function randomizeBottom()
 	
 	for (x=0;x<BOTTOM.length;x++)
 	{
-		BOTTOM[x] = (BOTTOM[x]*20+350)*(Math.atan((x*BOTTOMSIZE-1500)/200)-Math.atan((x*BOTTOMSIZE+2500-BOUNDRIGHT)/200))-80;
+		BOTTOM[x] = (BOTTOM[x]*20+350)*(Math.atan((x*BOTTOMSIZE-1500)/200)-Math.atan((x*BOTTOMSIZE+1500-BOUNDRIGHT)/200))-80;
 	}
 }
 
@@ -117,6 +115,25 @@ io.on('connection',function(s){
 				var name = evt.nickname;
 				if (name.length>15 || name.length<1) name = "Guest"+(i+1);
 				
+				var notmore = 0;
+				var contains;
+				
+				do {
+					contains = false;
+					
+					for (a=0;a<FISH.length;a++)
+					{
+						if (name==FISH[a][8])
+						{
+							name += ""+Math.floor(Math.random()*9.999);
+							contains = true;
+						}
+					}
+					
+					notmore++;
+				}
+				while (notmore<5 && contains)
+			
 				var sx = 3000+(BOUNDRIGHT-6000)*Math.random();
 				var sy = 100+600*Math.random();
 				
@@ -493,10 +510,10 @@ function mod(a,b)
 CREATELEVEL();
 HANDLEGAME();
 
-var port = process.env.PORT || 8080;
+//var port = process.env.PORT || 8080; // heroku
+var port = 80;
 
 http.listen(port, function(){ //nasluchuje
   console.log('listening on *:80');
 });
-
 
