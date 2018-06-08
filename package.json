@@ -1,7 +1,12 @@
 {
   "name": "time2poop",
   "version": "1.0.0",
-  "description": "",
+  "description": "no way",
+  "dependencies": {
+    "express": "4.16.3",
+    "socket.io": "2.1.1"
+  },
+  "main": "server.js",
   "start": "node server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,9 +16,5 @@
   "license": "ISC",
   "engines": {
     "node": "4.1.1"
-  },
-  "dependencies": {
-    "express": "4.16.3",
-    "socket.io": "2.1.1"
   }
 }
