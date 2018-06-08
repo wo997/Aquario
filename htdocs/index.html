@@ -223,11 +223,11 @@ function setAlpha(op)
 		</div>
 		<script>
 		var node = document.getElementById('nickname');
-		node.addEventListener('keydown', function onEvent(event) {
+		/*node.addEventListener('keydown', function onEvent(event) {
 			if (event.key === "Enter") {
 				startSocket();
 			}
-		});
+		});*/
 		
 		var COLOR = {r:255,g:0,b:0};
 		
@@ -493,6 +493,7 @@ function startGame()
 	
 	fadeOutMenu();
 	//loop();
+	canvas.focus();
 }
 
 function getSize(s)
@@ -678,7 +679,7 @@ function update(time)
 			if (getSmaller<0.99)
 			{
 				if (diedText.alpha<1) diedText.alpha += 0.05;
-				SIZE*=getSmaller;
+				if (i==PLAYERID) SIZE*=getSmaller;
 				getSmaller-=0.1;
 				if (getSmaller<=0) continue;
 			}
@@ -691,7 +692,7 @@ function update(time)
 				{
 					socket.emit("tasty",0.1);
 					
-					var x = Math.random()*(BOUNDRIGHT-3000)+1500-SCROLLX;
+					var x = Math.random()*(BOUNDRIGHT-2800)+1400;
 					if (x-SCROLLX>-10 && x-SCROLLX<WIDTH+10)
 					{
 						if (SCROLLX<BOUNDRIGHT/2) x+=2500;
@@ -843,7 +844,7 @@ function face()
 	O2smooth = O2smooth*0.8 + FISH[PLAYERID][10]*0.2;
 	
 	var list = [];
-	list.push(["maja",17]);
+	/*list.push(["maja",17]);
 	list.push(["maja",17]);
 	list.push(["dupa",15]);
 	list.push(["gdspa",12]);
@@ -851,9 +852,11 @@ function face()
 	list.push(["dupa4",9]);
 	list.push(["dupa5",11]);
 	list.push(["dupa5",14]);
-	list.push(["heniek1234",13]);
+	list.push(["heniek1234",13]);*/
 	for (i=0;i<FISH.length;i++)
 	{
+		if (POSTO[i][0] == 0) continue;
+		
 		var currSc = Math.round(FISH[i][2] * 10);
 		if (i==PLAYERID)
 		{
@@ -1172,7 +1175,7 @@ function randomizeBottom()
 	BOTTOM = [Math.random()-0.5];
 	
 	var vel = 0;
-	for (x=1;x<BOUNDRIGHT/BOTTOMSIZE;x++)
+	for (x=1;x<BOUNDRIGHT/BOTTOMSIZE+2;x++)
 	{
 		vel = 0.99*vel + pseudoRandom(x);
 		BOTTOM.push((BOTTOM[x-1] + vel) * 0.5);
@@ -1180,7 +1183,7 @@ function randomizeBottom()
 	
 	for (x=0;x<BOTTOM.length;x++)
 	{
-		BOTTOM[x] = (BOTTOM[x]*20+350)*(Math.atan((x*BOTTOMSIZE-1500)/200)-Math.atan((x*BOTTOMSIZE+2500-BOUNDRIGHT)/200))-80;
+		BOTTOM[x] = (BOTTOM[x]*20+350)*(Math.atan((x*BOTTOMSIZE-1500)/200)-Math.atan((x*BOTTOMSIZE+1500-BOUNDRIGHT)/200))-80;
 	}
 }
 
@@ -1193,7 +1196,7 @@ function randomizePlankton()
 {
 	PLANKTON = [];
 	
-	for (x=1400;x<BOUNDRIGHT-2400;x+=100)
+	for (x=1400;x<BOUNDRIGHT-1400;x+=100)
 	{
 		var le = BOTTOM[Math.floor(x/BOTTOMSIZE)];
 		var ri = BOTTOM[Math.ceil(x/BOTTOMSIZE)];
