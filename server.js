@@ -493,7 +493,10 @@ function mod(a,b)
 CREATELEVEL();
 HANDLEGAME();
 
-http.listen(80, function(){ //nasluchuje
+var port = process.env.PORT || 8080;
+
+http.listen(port, function(){ //nasluchuje
   console.log('listening on *:80');
 });
+
 
