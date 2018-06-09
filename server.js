@@ -514,8 +514,8 @@ function mod(a,b)
 CREATELEVEL();
 HANDLEGAME();
 
-//var port = process.env.PORT || 8080; // heroku
-var port = 80;
+var port = process.env.PORT || 8080; // heroku
+//var port = 80;
 
 http.listen(port, function(){ //nasluchuje
   console.log('listening on *:80');
