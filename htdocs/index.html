@@ -731,11 +731,11 @@ function update(time)
 			
 			if (FY > SIZE * 5.9)
 			{
-				var turn = (mod(FISH[i][6]-dir,2*Math.PI)-Math.PI);
+				var turn = (mod(FISH[i][6]-dir,2*Math.PI)-Math.PI)*2.61/VEL;
 				if (turn>1) turn = 1;
 				if (turn<-1) turn = -1;
 				
-				FISH[i][4] += deltaTime*turn/(10+5*SIZE);
+				FISH[i][4] += deltaTime*turn/(10+2*SIZE);
 				
 				if (FISH[i][7] && FISH[i][10]>0.5)
 				{
