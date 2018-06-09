@@ -116,7 +116,7 @@ io.on('connection',function(s){
 				s.playerid = i;
 				SLOTS[i] = true;				
 				var name = evt.nickname;
-				if (name.length>15 || name.length<1) name = "Guest"+(i+1);
+				if (name.length>18 || name.length<1) name = "Guest"+(i+1);
 				
 				var notmore = 0;
 				var contains;
@@ -186,8 +186,8 @@ function lose(i,get)
 {
 	if (FISH[i][2]>1)
 	{
-		FISH[i][2] -= get/2;
-		FISH[i][9] -= 50*get;
+		FISH[i][2] -= get*0.6;
+		FISH[i][9] -= 40*get;
 		if (FISH[i][2]<1) FISH[i][2]=1;
 	}
 	else
@@ -292,21 +292,21 @@ function HANDLEGAME()
 			
 			if (dx*dx+dy*dy < squared(SIZE*8+s2*19))
 			{
-				var ratio = 0.07*Math.sqrt(SIZE/s2);
+				var ratio = 0.09*Math.sqrt(SIZE/s2);
 				gain(i,ratio);
 				lose(a,ratio);
 				if (FISH[a][9] <= 0) gain(i,FISH[a][2]);
-				FISH[i][3] *= 0.9;
+				FISH[i][3] *= 0.7;
 			}
 		}
 		
 		if (FY > SIZE * 5.9)
 		{
-			var turn = (mod(FISH[i][6]-dir,2*Math.PI)-Math.PI);
+			var turn = (mod(FISH[i][6]-dir,2*Math.PI)-Math.PI)*2.61/VEL;
 			if (turn>1) turn = 1;
 			if (turn<-1) turn = -1;
 			
-			FISH[i][4] += turn/(5+2*SIZE);
+			FISH[i][4] += turn/(5+SIZE);
 			
 			if (FISH[i][7] && FISH[i][10]>=1)
 			{
@@ -404,7 +404,7 @@ function HANDLEGAME()
 					var dy = FISH[a][1]-FY;
 					if (dx*dx+dy*dy < SIZE*SIZE*550)
 					{
-						SHARK[i][3] *= 0.8;
+						SHARK[i][3] *= 0.7;
 					}
 				}
 			}
@@ -514,8 +514,8 @@ function mod(a,b)
 CREATELEVEL();
 HANDLEGAME();
 
-var port = process.env.PORT || 8080; // heroku
-//var port = 80;
+//var port = process.env.PORT || 8080; // heroku
+var port = 80;
 
 http.listen(port, function(){ //nasluchuje
   console.log('listening on *:80');
