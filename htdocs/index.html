@@ -814,6 +814,7 @@ function update(time)
 		
 		renderWater();
 		renderBottom();
+		renderGreenShit();
 		
 		face();
 		
@@ -1101,16 +1102,8 @@ function control()
 
 function renderBottom()
 {
-	/*C.lineJoin = "round";
-	C.fillStyle="#918639";
-	C.strokeStyle = "#6E652B";
-	C.beginPath();
-	C.lineWidth = 2;*/
-	
 	C.lineStyle(2, 0x6E652B);
-	
 	C.beginFill(0x817639);
-	//C.strokeThickness = 3;
 	
 	C.moveTo(0,2*HEIGHT);
 	
@@ -1121,6 +1114,54 @@ function renderBottom()
 	
 	C.lineTo(WIDTH,2*HEIGHT);
 	C.endFill();
+}
+
+function renderGreenShit()
+{
+	//C.beginFill(0x118833);
+	
+	for (x=0;x<WIDTH/BOTTOMSIZE+2;x++)
+	{
+		var which = x+Math.floor(SCROLLX/BOTTOMSIZE);
+		var type = (2*which+which%11-which%5)%16;
+		if (which<30 || which>BOUNDRIGHT/BOTTOMSIZE-30 || type>3) continue;
+		
+		var mx = x*BOTTOMSIZE-mod(SCROLLX,BOTTOMSIZE);
+		var my = BOTTOM[which]-SCROLLY;
+		
+		if (type < 2)
+		{
+			var shift = TIME*0.05+(mx+SCROLLX)*0.01;
+			C.lineStyle(5, 0x005522);
+			C.moveTo(mx,my);
+			var sy = my-20-which%7;
+			var nd = mx+Math.sin(shift)*3;
+			C.lineTo(nd,sy);
+			C.lineTo(mx+Math.sin(shift+0.3)*7-(type==1?9:5)-which%3,sy-20-(which+3)%7);
+			
+			if (type == 1)
+			{
+				C.lineTo(nd,sy);
+				C.lineTo(mx+Math.sin(shift)*7+2-(which+1)%2,sy-23-which%5);
+			}
+			
+			C.lineTo(nd,sy);
+			C.lineTo(mx+Math.sin(shift-0.3)*7+(type==1?14:10)-(which+2)%3,sy-20-which%7);
+		}
+		else if (type < 4)
+		{
+			C.beginFill(0x446677);
+			//C.beginFill(0xAA3366);
+			C.lineStyle(2, 0x335566);
+			//C.lineStyle(5, 0x882244);
+			w = 4+(which*3)%7;
+			h = w-which%3;
+			C.drawRoundedRect(mx-w,my-h*1.5,2*w,2*h,h-1);
+			C.endFill();
+		}
+	}
+	
+	//C.endFill();
 }
 
 function input()
@@ -1295,20 +1336,21 @@ function startSocket()
 			FISH[i][5] = fis.data[i][5];
 			FISH[i][6] = fis.data[i][6];
 			FISH[i][7] = fis.data[i][7];
-			FISH[i][8] = fis.data[i][8];
 			FISH[i][9] = fis.data[i][9];
 			FISH[i][10] = fis.data[i][10];
 			
 			POSTO[i][0] = fis.data[i][0]+Math.cos(dir)*timeAhead*vel;
 			POSTO[i][1] = fis.data[i][1]+Math.sin(dir)*timeAhead*vel;
 			
-			if (FISH[i][0]==0) // new fish in
+			if (FISH[i][8] != fis.data[i][8]) // new fish in - different name
 			{
 				FISH[i][0] = POSTO[i][0];
 				FISH[i][1] = POSTO[i][1];
 				FISH[i][3] = POSTO[i][2];
 				FISH[i][3] = POSTO[i][3];
 				FISH[i][2] = POSTO[i][4];
+				
+				FISH[i][8] = fis.data[i][8];
 			}
 		}
 		
