@@ -204,7 +204,7 @@ function isSafe(x,y)
 	{
 		var dx = FISH[a][0]-x;
 		var dy = FISH[a][1]-y;
-		if (dx*dx+dy*dy<500000)
+		if (dx*dx+dy*dy<1500000)
 		{
 			safe = false;
 			break;
@@ -310,7 +310,7 @@ function HANDLEGAME()
 			
 			if (FISH[i][7] && FISH[i][10]>=1)
 			{
-				FISH[i][3] += 0.4;
+				FISH[i][3] += 0.5;
 				FISH[i][10] -= 1;
 			}
 		}
@@ -382,6 +382,28 @@ function HANDLEGAME()
 		var mouthX = FX + COS*SIZE*18;
 		var mouthY = FY + SIN*SIZE*18;
 		
+		var inside = true;
+		if (FX>2000 && FX<BOUNDRIGHT-2000)
+		{		
+			for (a=i+1;a<SHARK.length;a++)
+			{
+				var heX = SHARK[a][0];
+				var heY = SHARK[a][1];
+				if (heX>2000 && heX<BOUNDRIGHT-2000)
+				{
+					var dx = heX-FX;
+					var dy = heY-FY;
+					if (dx*dx+dy*dy < 50000)
+					{
+						var d1 = Math.atan2(dx,dy)-1.14;
+						SHARK[i][5] = d1;
+						SHARK[a][5] = d1+3.14;
+					}
+				}
+			}
+		}
+		else inside = false;
+		
 		var followClosest = 10000000;
 		
 		for (a=0;a<FISH.length;a++)
@@ -393,7 +415,7 @@ function HANDLEGAME()
 			var dist = dx*dx+dy*dy;
 			var s2 = getSize(FISH[a][2]);
 			
-			if (FY>30 && dist<60000 && Math.random()<0.15)
+			if (inside && FY>30 && dist<60000 && Math.random()<0.08)
 			{
 				if (dist < followClosest)
 				{
