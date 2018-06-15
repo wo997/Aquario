@@ -309,7 +309,7 @@ var canvas,contextText;
 
 function RELOAD()
 {
-	alert("You've been kicked, server is down or you lost internet connection.");
+	alert("You've been kicked, you were inactive or the connection was broken.");
 	location.reload();
 	setTimeout(null,100000);
 }
@@ -572,7 +572,7 @@ function update(time)
 			
 			if (POSTO[PLAYERID][0]==0 || TIME-lastUpdate>300)
 			{
-				RELOAD();
+				//RELOAD();
 			}
 		}
 		
@@ -829,12 +829,21 @@ function update(time)
 			
 			var mx = FX-SCROLLX;
 			var my = FY-SCROLLY;
-			if (mx>-25*SIZE && mx<WIDTH+25*SIZE && my>-25*SIZE && my<HEIGHT+25*SIZE)
+			if (mx>-25*SIZE-20 && mx<WIDTH+25*SIZE+20)
 			{
-				renderFish();
-				displayNames[i].x = FX-SCROLLX;
-				displayNames[i].y = FY-SIZE*33-30-SCROLLY;
-				displayNames[i].text = FISH[i][8];
+				if (my>-25*SIZE && my<HEIGHT+25*SIZE)
+				{
+					renderFish();
+				}
+				
+				my = FY-SIZE*33-30-SCROLLY;
+				if (my>-25*SIZE && my<HEIGHT+25*SIZE)
+				{
+					displayNames[i].x = mx;
+					displayNames[i].y = my;
+					displayNames[i].text = FISH[i][8];
+				}
+				else displayNames[i].y = -100;
 			}
 			else displayNames[i].y = -100;
 			
@@ -1245,6 +1254,8 @@ function mouseUp(e)
 var CHATACTIVE = false;
 function keyDown(e)
 {
+	if (!gameStarted) return;
+	
 	var keyCode = e.which || e.keyCode || 0;
 	var len = chatMeText.text.length;
 	if (keyCode == 8)
@@ -1274,7 +1285,7 @@ function keyDown(e)
 			chatMeText.text = "Me: ";
 		}
 	}
-	else if (CHATACTIVE && gameStarted && keyCode>=32 && e.key.length == 1 && e.keyCode!=220 && len<30)
+	else if (CHATACTIVE && keyCode>=32 && e.key.length == 1 && e.keyCode!=220 && len<30)
 	{
 		chatMeText.text += e.key;
 	}
