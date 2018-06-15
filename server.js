@@ -381,8 +381,8 @@ function HANDLEGAME()
 					if (dx*dx+dy*dy < 150000)
 					{
 						var d1 = Math.atan2(dx,dy)-1.14;
-						SHARK[i][5] = d1;
-						SHARK[a][5] = d1+3.14;
+						if (FY<BOTTOM[Math.floor(FX/BOTTOMSIZE)]-270) SHARK[i][5] = d1;
+						if (heY<BOTTOM[Math.floor(heX/BOTTOMSIZE)]-270) SHARK[a][5] = d1+3.14;
 					}
 				}
 			}
