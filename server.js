@@ -62,28 +62,13 @@ function pseudoRandom(i)
 	return Math.abs(23*Math.sin(BOTTOMKEY*i+273*i)+23*Math.tan(BOTTOMKEY*i*(0.2-3*i)))%1-0.5;
 }
 
-//var chatBuffer = []; //bufor czatu
 io.on('connection',function(s){
 	s.on('disconnect',function(){
 		console.log("a user disconnected");
 		var evt = {user: this.username.toString()};
-		//io.emit('bye',evt);
-		//chatBuffer.push({m: 'bye', e: evt});
 		
 		disconnectPlayer(s.playerid);
 	});
-	
-	/*s.on('msg',function(msg){
-		var evt = {user: this.username.toString(), msg: msg};
-		io.emit('msg',evt);
-		chatBuffer.push({m: 'msg', e: evt});
-	});
-	s.on('userset',function(set){
-		var evt = {old: this.username.toString(), snew: set};
-		io.emit('userset',evt);
-		this.username = set;
-		chatBuffer.push({m: 'userset', e: evt});
-	});*/
 	s.on('position',function(targetDir,boost){
 		if (typeof targetDir != "number" || typeof boost != "boolean") return;
 		if (FISH[s.playerid])
@@ -96,13 +81,13 @@ io.on('connection',function(s){
 		if (typeof get != "number") return;
 		gain(s.playerid,get);
 	});
-	//s.emit('buffer',chatBuffer); //wysyla iwenta
-	s.username = "A socket.io chat user";
+	s.on('chat',function(mess){
+		if (mess.length<30) io.emit("chat",FISH[s.playerid][8]+": "+mess);
+	});
+	s.username = "guest";
 	s.playerid = -1;
 	console.log("a user connected");
 	var evt = {user: s.username.toString()};
-	//io.emit('hi',evt);
-	//chatBuffer.push({m: 'hi', e: evt});
 	
 	s.on('accessToken',function(evt){
 		var gotit = false;
@@ -393,7 +378,7 @@ function HANDLEGAME()
 				{
 					var dx = heX-FX;
 					var dy = heY-FY;
-					if (dx*dx+dy*dy < 50000)
+					if (dx*dx+dy*dy < 150000)
 					{
 						var d1 = Math.atan2(dx,dy)-1.14;
 						SHARK[i][5] = d1;
@@ -477,7 +462,7 @@ function HANDLEGAME()
 				SHARK[i][3] += much * SIN * 0.05;
 			}
 		}
-		else SHARK[i][3] = SHARK[i][3]*0.81 + 0.5 + 0.2 * Math.sin(i+time*0.002);
+		else SHARK[i][3] = SHARK[i][3]*0.81 + 0.5 + 0.2 * Math.sin(i+time*0.005);
 		
 		SIN = Math.sin(SHARK[i][5]);
 		COS = Math.cos(SHARK[i][5]);
