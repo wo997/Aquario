@@ -82,7 +82,7 @@ io.on('connection',function(s){
 		gain(s.playerid,get);
 	});
 	s.on('chat',function(mess){
-		if (mess.length<30) io.emit("chat",FISH[s.playerid][8]+": "+mess);
+		if (mess.length<35) io.emit("chat",FISH[s.playerid][8]+": "+mess);
 	});
 	s.username = "guest";
 	s.playerid = -1;
