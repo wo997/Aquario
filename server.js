@@ -18,7 +18,7 @@ var slotID = [];
 for (i=0;i<HOWMANYSLOTS;i++) slotID.push(0);
 
 var FISH = []; // px,py,size,vel,dir,color,targetDir,boost,nick,hp,stamina
-for (i=0;i<HOWMANYSLOTS;i++) FISH.push([0,0,0,0,0,0,0,0,"",0,0]);
+for (i=0;i<HOWMANYSLOTS;i++) FISH.push([0,0,0,0,0,0,0,0,"",0,0,0]);
 
 var SHARK = []; // px,py,size,vel,dir,targetDir
 SHARK.push([2000,500,5,3,0,1]);
@@ -106,7 +106,8 @@ io.on('connection',function(s){
 				var notmore = 0;
 				var contains;
 				
-				do {
+				do
+				{
 					contains = false;
 					
 					for (a=0;a<FISH.length;a++)
@@ -141,7 +142,7 @@ io.on('connection',function(s){
 						}
 					}
 				}
-				FISH[i] = [sx,sy,1,0,0,evt.color,0,0,name,100,100];
+				FISH[i] = [sx,sy,1,0,0,evt.color,0,0,name,100,100,evt.type];
 				s.emit('playerAdded',BOTTOMKEY,BOUNDRIGHT,i);
 				i=100000000;
 			}
