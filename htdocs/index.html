@@ -29,41 +29,67 @@ function setF(){
 	}
 	SIZE = 0.7+3.5*ele.style.opacity;
 	type = MYTYPE;
+	
+	wasR = COLOR.r;
+	wasG = COLOR.g;
+	wasB = COLOR.b;
+	COLOR.r = 0;
+	COLOR.g = 57;
+	COLOR.b = 100;
+	FX += 2;
+	FY += 5;
+	renderFish();
+	COLOR.r = wasR;
+	COLOR.g = wasG;
+	COLOR.b = wasB;
+	FX -= 2;
+	FY -= 5;
 	renderFish();
 	
+	var op = ele.style.opacity;
+	var hai = ele.style.paddingTop;
+	var top = +hai.substr(0,hai.length-2)+HEIGHT/2;
 	if (dis(MOUSEX+137-WIDTH/2,MOUSEY-70-HEIGHT/2)<2500)
 	{
-		C.lineStyle(2,0x999999);
-		C.beginFill(0xFFFFFF);
+		C.lineStyle(2,0x999999,op);
+		C.beginFill(0xFFFFFF,op);
 		
-		if (LMB && !was) MYTYPE = MYTYPE%3+1;
+		if (LMB && !was)
+		{
+			MYTYPE = MYTYPE%3+1;
+			bubbleSnd.play();
+		}
 	}
 	else
 	{
-		C.lineStyle(2,0x777777);
-		C.beginFill(0xDDDDDD);
+		C.lineStyle(2,0x777777,op);
+		C.beginFill(0xDDDDDD,op);
 	}
-	C.moveTo(-130+WIDTH/2,40+HEIGHT/2);
-	C.lineTo(-150+WIDTH/2,70+HEIGHT/2);
-	C.lineTo(-130+WIDTH/2,100+HEIGHT/2);
+	C.moveTo(-130+WIDTH/2,top);
+	C.lineTo(-150+WIDTH/2,30+top);
+	C.lineTo(-130+WIDTH/2,60+top);
 	C.closePath();
 	C.endFill();
 	
 	if (dis(MOUSEX-137-WIDTH/2,MOUSEY-70-HEIGHT/2)<2500)
 	{
-		C.lineStyle(2,0x999999);
-		C.beginFill(0xFFFFFF);
+		C.lineStyle(2,0x999999,op);
+		C.beginFill(0xFFFFFF,op);
 		
-		if (LMB && !was) MYTYPE = (MYTYPE+1)%3+1;
+		if (LMB && !was)
+		{
+			MYTYPE = (MYTYPE+1)%3+1;
+			bubbleSnd.play();
+		}
 	}
 	else
 	{
-		C.lineStyle(2,0x777777);
-		C.beginFill(0xDDDDDD);
+		C.lineStyle(2,0x777777,op);
+		C.beginFill(0xDDDDDD,op);
 	}
-	C.moveTo(130+WIDTH/2,40+HEIGHT/2);
-	C.lineTo(150+WIDTH/2,70+HEIGHT/2);
-	C.lineTo(130+WIDTH/2,100+HEIGHT/2);
+	C.moveTo(130+WIDTH/2,top);
+	C.lineTo(150+WIDTH/2,30+top);
+	C.lineTo(130+WIDTH/2,60+top);
 	C.closePath();
 	C.endFill();
 	
@@ -80,6 +106,7 @@ function fadeInMenu(){
 			document.getElementById("lol").style.display = "block";
 			document.getElementById('conn').style.visibility = 'hidden';
 			highScoreText.text = 'Your highest score: ' + highScore;
+			canPlay = true;
 		}
 		if(anim.p <= 30){
 			var much = 40 - Math.cos(anim.p * Math.PI / 60) * 40;
@@ -262,6 +289,7 @@ function setAlpha(op)
 				</div>
 			</div>
 			<canvas id="canvasText" width="0" height="0"></canvas>
+			<audio src="htdocs/bubble.wav" type="audio/wav" id="bubble">
 		</div>
 		<script>
 		var node = document.getElementById('nickname');
@@ -296,7 +324,7 @@ function setAlpha(op)
 		var arel = document.getElementsByClassName("cs");
 		for(i = 0;i < arel.length; i++){
 			var col = arel[i].style.backgroundColor;
-			arel[i].onclick = new Function("heh('" + col + "')");
+			arel[i].onclick = new Function("heh('" + col + "');bubbleSnd.play();");
 		};
 		var ele = document.getElementById("lol");
 		
@@ -349,6 +377,8 @@ var skywater;
 
 var canvas,contextText;
 
+var bubbleSnd;
+
 function RELOAD()
 {
 	alert("You've been kicked, you were inactive or the connection was broken.");
@@ -400,6 +430,8 @@ function init() {
 	window.addEventListener("mousedown", mouseDown);
 	window.addEventListener("mouseup", mouseUp);
 	window.addEventListener("keydown", keyDown);
+	
+	bubbleSnd = document.getElementById('bubble');
 	
 	skywater = new PIXI.Sprite(PIXI.Texture.fromImage("htdocs/skywater.png"));
 	skywater.position.x = 0;
@@ -1065,10 +1097,14 @@ function renderFish()
 	if (ele.style.opacity > 0)
 	{
 		yummy = 0;
-		C.lineStyle(null);
-		C.beginFill(0x006699,Math.round(ele.style.opacity*10)/10);
-		C.drawRect(0,0,WIDTH,HEIGHT);
-		C.endFill();
+		
+		if (COLOR.r+COLOR.g+COLOR.b == 157)
+		{
+			C.lineStyle(null);
+			C.beginFill(0x006699,Math.round(ele.style.opacity*10)/10);
+			C.drawRect(0,0,WIDTH,HEIGHT);
+			C.endFill();
+		}
 	}
 	
 	C.lineStyle(null);
@@ -1367,7 +1403,7 @@ function keyDown(e)
 			chatMeText.text = "Me: ";
 		}
 	}
-	else if (CHATACTIVE && keyCode>=32 && e.key.length == 1 && e.keyCode!=220 && len<30)
+	else if (CHATACTIVE && keyCode>=32 && e.key.length == 1 && e.keyCode!=220 && len<35)
 	{
 		chatMeText.text += e.key;
 	}
@@ -1472,9 +1508,15 @@ function sendPlayerData()
 	socket.emit('position',FISH[PLAYERID][6],FISH[PLAYERID][7]);
 }
 
+var canPlay = true;
 var totalLines = 0;
 function startSocket()
 {
+	if (!canPlay) return;
+	canPlay = false;
+	
+	bubbleSnd.play();
+
 	window.socket = io();
 	
 	document.getElementById('conn').style.visibility = 'visible'
@@ -1513,7 +1555,7 @@ function startSocket()
 	{
 		if (first) atmost = 0;
 		atmost++;
-		if (atmost>10)
+		if (atmost>15)
 		{
 			RELOAD();
 		}
