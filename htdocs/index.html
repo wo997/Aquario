@@ -785,10 +785,10 @@ function update(time)
 			
 			FISH[i][2] -= 0.00001*(SIZE-0.7)*(200-FISH[i][9]);
 			
-			if (getSmaller<0.99)
+			if (getSmaller<0.99 && i==PLAYERID)
 			{
 				if (diedText.alpha<1) diedText.alpha += 0.05;
-				if (i==PLAYERID) SIZE*=getSmaller;
+				SIZE*=getSmaller;
 				getSmaller-=0.1;
 				if (getSmaller<=0) continue;
 			}
@@ -1426,7 +1426,7 @@ function renderWater()
 	
 	C.moveTo(0,HEIGHT);
 	
-	for (x=-2;x<WIDTH+10;x+=10)
+	for (x=-2;x<WIDTH+15;x+=15)
 	{
 		C.lineTo(x,2*Math.sin(0.1*(x+SCROLLX+TIME))-SCROLLY);
 	}
