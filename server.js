@@ -82,7 +82,16 @@ io.on('connection',function(s){
 		gain(s.playerid,get);
 	});
 	s.on('chat',function(mess){
-		if (mess.length<35) io.emit("chat",FISH[s.playerid][8]+": "+mess);
+		if (mess.length<70)
+		{
+			if (mess.length>35)
+			{
+				var split = Math.floor(mess.length/2);
+				io.emit("chat",FISH[s.playerid][8]+": "+mess.substr(0,split));
+				io.emit("chat",FISH[s.playerid][8]+": "+mess.substr(split));
+			}
+			else io.emit("chat",FISH[s.playerid][8]+": "+mess);
+		}
 	});
 	s.username = "guest";
 	s.playerid = -1;
