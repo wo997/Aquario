@@ -300,7 +300,7 @@ function setAlpha(op)
 		});*/
 		
 		var COLOR = {r:255,g:0,b:0};
-		var MYTYPE = Math.floor(2.99*Math.random());
+		var MYTYPE = 1+Math.floor(2.99*Math.random());
 		
 		function heh(col){
 			var el = document.getElementsByClassName("csH")[0];
@@ -646,7 +646,7 @@ function update(time)
 			
 			if (POSTO[PLAYERID][0]==0 || TIME-lastUpdate>300)
 			{
-				//RELOAD();
+				RELOAD();
 			}
 		}
 		
@@ -926,7 +926,7 @@ function update(time)
 			
 			renderFish();*/
 			
-			//for (p=0;p<30;p++) {renderFish();FX+=25;if (FX>SCROLLX+800) {FX = SCROLLX+200; FY+=25;}}
+			//for (p=0;p<100;p++) {renderFish();FX+=25;if (FX>SCROLLX+800) {FX = SCROLLX+200; FY+=25;}}
 		}
 		
 		if (ele.style.opacity>0.05) setF();
@@ -1168,11 +1168,11 @@ function renderFish()
 	
 	var pl = swirlPoint2(-24,1-tirl);
 	var plmo = swirlPoint2(-24,6-yummy-tirl);
-	var plmi = swirlPoint2(-12,3-tirl*0.5);
+	var plmi = swirlPoint2(-10-type,3-tirl*0.5);
 	var pr = swirlPoint2(24,twirl*0.5);
-	var plu = swirlPoint2(-20,-24-twirl);
-	var pld = swirlPoint2(-18,23-twirl);
-	var pru = swirlPoint2(20,-20+twirl);
+	var plu = swirlPoint2(-24+type*2,-24-twirl);
+	var pld = swirlPoint2(-18+type*2,23-twirl);
+	var pru = swirlPoint2(22-type*3,-18+twirl-type*2);
 	var prd = swirlPoint2(15,19+twirl);
 	var peye;
 	if (type == 1) peye = swirlPoint2(-14,-7-twirl*0.25);
@@ -1189,7 +1189,7 @@ function renderFish()
 	
 	C.lineStyle(SIZE*2.5,0xffffff);
 	C.beginFill(0x000000);
-	C.drawCircle(peye[0],peye[1],SIZE*4);
+	C.drawCircle(peye[0],peye[1],SIZE*(4.5-0.5*type));
 	C.endFill();
 }
 
@@ -1403,7 +1403,7 @@ function keyDown(e)
 			chatMeText.text = "Me: ";
 		}
 	}
-	else if (CHATACTIVE && keyCode>=32 && e.key.length == 1 && e.keyCode!=220 && len<35)
+	else if (CHATACTIVE && keyCode>=32 && e.key.length == 1 && e.keyCode!=220 && len<70)
 	{
 		chatMeText.text += e.key;
 	}
