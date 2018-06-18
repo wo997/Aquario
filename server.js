@@ -199,7 +199,7 @@ function isSafe(x,y)
 	{
 		var dx = FISH[a][0]-x;
 		var dy = FISH[a][1]-y;
-		if (dx*dx+dy*dy<1500000)
+		if (dx*dx+dy*dy<500000)
 		{
 			safe = false;
 			break;
@@ -210,7 +210,7 @@ function isSafe(x,y)
 	{
 		var dx = SHARK[a][0]-x;
 		var dy = SHARK[a][1]-y;
-		if (dx*dx+dy*dy<100000)
+		if (dx*dx+dy*dy<500000)
 		{
 			safe = false;
 			break;
@@ -291,7 +291,8 @@ function HANDLEGAME()
 				gain(i,ratio);
 				lose(a,ratio);
 				if (FISH[a][9] <= 0) gain(i,FISH[a][2]);
-				FISH[i][3] *= 0.7;
+				FISH[i][3] *= 0.8;
+				FISH[a][3] += 0.2;
 			}
 		}
 		
@@ -390,9 +391,9 @@ function HANDLEGAME()
 					var dy = heY-FY;
 					if (dx*dx+dy*dy < 150000)
 					{
-						var d1 = Math.atan2(dx,dy)-1.14;
-						if (FY<BOTTOM[Math.floor(FX/BOTTOMSIZE)]-270) SHARK[i][5] = d1;
-						if (heY<BOTTOM[Math.floor(heX/BOTTOMSIZE)]-270) SHARK[a][5] = d1+3.14;
+						var d1 = Math.atan2(dx*3,dy)-1.14;
+						if (FY>50 && FY<BOTTOM[Math.floor(FX/BOTTOMSIZE)]-270) SHARK[i][5] = d1;
+						if (heY>50 && heY<BOTTOM[Math.floor(heX/BOTTOMSIZE)]-270) SHARK[a][5] = d1+3.14;
 					}
 				}
 			}
