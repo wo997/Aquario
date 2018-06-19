@@ -378,7 +378,7 @@ function HANDLEGAME()
 		{
 			FISH[i][0] = hookX;
 			FISH[i][1] = hookY+25;
-			FISH[i][4] = 0.3*(mod(FISH[i][4]+Math.PI/2,2*Math.PI)-Math.PI);
+			FISH[i][4] += 0.3*(mod(FISH[i][4]+Math.PI/2,2*Math.PI)-Math.PI);
 			FISH[i][3] = 0;
 			if (veinLen==0)
 			{
