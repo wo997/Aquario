@@ -293,11 +293,11 @@ function setAlpha(op)
 		</div>
 		<script>
 		var node = document.getElementById('nickname');
-		/*node.addEventListener('keydown', function onEvent(event) {
-			if (event.key === "Enter") {
+		node.addEventListener('keydown', function onEvent(event) {
+			if (event.key === "Enter" && MOUSEX>=0 && MOUSEX<=WIDTH) {
 				startSocket();
 			}
-		});*/
+		});
 		
 		var COLOR = {r:255,g:0,b:0};
 		var MYTYPE = 1+Math.floor(2.99*Math.random());
@@ -339,6 +339,22 @@ var SCROLLX, SCROLLY;
 var MOUSEX, MOUSEY, LMB;
 var PLANKTON = [];
 var TIME = 0;
+
+var boatX = 0;
+var boatY = 0;
+var boatVX = 0;
+var boatVA = 0;
+var boatTargetX = 0;
+//var boatWaitTarget = 0;
+//var boatStop = false;
+var rodUp = 0;
+var hookXTo = 0;
+var hookYTo = 0;
+var hookX = 0;
+var hookY = 0;
+var hookVX = 0;
+var hookVY = 0;
+var veinLen = 0;
 
 var PLAYERID = -1;
 
@@ -437,7 +453,14 @@ function init() {
 	skywater.position.x = 0;
 	skywater.position.y = 0;
 	skywater.width = WIDTH;
-	skywater.height = 3000;//HEIGHT;
+	skywater.height = 3000;//HEIGHT?;
+	
+	boat = new PIXI.Sprite(PIXI.Texture.fromImage("htdocs/boat.png"));
+	boat.anchor.set(0.5,0.5);
+	
+	man = new PIXI.Sprite(PIXI.Texture.fromImage("htdocs/man.png"));
+	man.anchor.set(-0.3,1.2);
+	man.scale.x = -1;
 	
 	C = new PIXI.Graphics();
 	
@@ -537,7 +560,7 @@ function init() {
 	chatMeText.anchor.set(0, 0);
 	chatMeText.alpha = 0;
 	
-	stage.addChild(skywater,C,hpText,o2Text,scoreText,scoreMeText,diedText,highScoreText,chatText,chatMeText);
+	stage.addChild(skywater,man,boat,C,hpText,o2Text,scoreText,scoreMeText,diedText,highScoreText,chatText,chatMeText);
 	
 	for (i=0;i<FISH.length;i++) {
 		displayNames[i] = new PIXI.Text('hey', {
@@ -599,6 +622,17 @@ function startGame()
 	
 	totalLines = 0;
 	chatText.text = "";
+	chatMeText.text = "Press ENTER to chat";
+	CHATACTIVE = false;
+	
+	boatX = 2000;
+	boatY = 5;
+	boatVX = 0;
+	boatVA = 0;
+	boatTargetX = 3000;
+	//boatStop = true;
+	
+	man.scale.x = (boatVX>0?-1:1);
 	
 	fadeOutMenu();
 	//loop();
@@ -641,7 +675,7 @@ function update(time)
 		}
 		else
 		{
-			SOFT = Math.pow(0.95,deltaTime);
+			SOFT = Math.pow(0.9,deltaTime);
 			control();
 			
 			if (POSTO[PLAYERID][0]==0 || TIME-lastUpdate>300)
@@ -653,6 +687,7 @@ function update(time)
 		skywater.y = -1180-SCROLLY;
 		
 		renderPlankton();
+		moveBoat();
 		
 		var len = 270 + 80 * Math.sin(TIME*0.01);
 		var shift = 150 + 80 * Math.sin(TIME*0.003427);
@@ -921,12 +956,9 @@ function update(time)
 			else displayNames[i].y = -100;
 			
 			
-			/*FX = POSTO[i][0];
-			FY = POSTO[i][1];
+			//FX = POSTO[i][0]; FY = POSTO[i][1];	renderFish();
 			
-			renderFish();*/
-			
-			//for (p=0;p<100;p++) {renderFish();FX+=25;if (FX>SCROLLX+800) {FX = SCROLLX+200; FY+=25;}}
+			//for (p=0;p<20;p++) {renderFish();FX+=25;if (FX>SCROLLX+800) {FX = SCROLLX+200; FY+=25;}}
 		}
 		
 		if (ele.style.opacity>0.05) setF();
@@ -952,6 +984,163 @@ function update(time)
     requestAnimationFrame(update);
 
 	//setTimeout(update,1000/6000);
+}
+
+function moveBoat()
+{
+	hookX = hookX * 0.7 + hookXTo * 0.3;
+	hookY = hookY * 0.7 + hookYTo * 0.3;
+	
+	var vx = Math.cos(TIME*0.07)*boatVX;
+	var vy = Math.sin(TIME*0.07)*Math.abs(boatVX);
+	
+	var high = Math.atan(rodUp-6);
+	
+	var tox = boatX-man.scale.x*(65-(high+1.2)*(high+1.2)*2);
+	var toy = boatY-50-20*high;
+	
+	if (veinLen==0)
+	{
+		hookX = tox;
+		hookY = toy;
+	}
+	var hx = hookX-SCROLLX;
+	var hy = hookY-SCROLLY;
+	
+	if (Math.abs(boatX-boatTargetX)<100)
+	{
+		if (hookY>0 && veinLen>0)
+		{			
+			hookVY *=0.99;
+			hookVX -= 0.05*man.scale.x;
+			
+			var vex = hookX-tox;
+			var vey = hookY-toy;
+			
+			var len = Math.sqrt(vex*vex+vey*vey);
+			var distance = veinLen-len;
+			
+			if (distance<0)
+			{
+				hookVX *=0.95;
+				hookVY *=0.95;
+				hookX += 0.05*vex/len*distance;
+				hookY += 0.05*vey/len*distance;
+			}
+		}
+		/*if (boatStop)
+		{
+			boatTargetX += 0.5*(1000+500*Math.random()) * (Math.floor(Math.random())*2-1); // 1000 - 1500 pixels left or right
+			if (boatTargetX < 2200)  boatTargetX += 3000;
+			if (boatTargetX > BOUNDRIGHT-2200)  boatTargetX -= 3000;
+		}
+		else
+		{
+			//boatWaitTarget = TIME+500;
+			//boatStop = true;
+		}*/
+		
+		/*if (rodUp<12 || TIME>boatWaitTarget)
+		{			
+			if (TIME<=boatWaitTarget)
+			{
+				hookX = tox;
+				hookY = toy;
+				veinLen = 340;
+				hookVX = -man.scale.x*5;
+				hookVY = 0;
+				rodUp += 0.1*deltaTime;
+			}
+			else
+			{
+				if (veinLen>0) veinLen-=2;
+				else
+				{
+					if (rodUp>0) rodUp -= 0.1*deltaTime;
+					else rodUp = 0;						
+				}
+			}
+			
+		}
+		else 
+		{
+			rodUp = 12;
+			hookVY += 0.2;
+			hookX += hookVX;
+			hookY += hookVY;
+		}
+		
+		if (veinLen>0)
+		{
+			if (hookY>0)
+			{
+				hookVY *=0.99;
+				hookVX -= 0.05*man.scale.x;
+			}
+			
+			var vex = hookX-tox;
+			var vey = hookY-toy;
+			
+			var len = Math.sqrt(vex*vex+vey*vey);
+			var distance = veinLen-len;
+			
+			if (distance<0)
+			{
+				hookVX *=0.95;
+				hookVY *=0.95;
+				hookX += 0.3*vex/len*distance;
+				hookY += 0.3*vey/len*distance;
+			}
+		}*/
+	}
+	else
+	{
+		if (boatX<boatTargetX)
+		{
+			boatVX+=0.04;
+		}
+		else
+		{
+			boatVX-=0.04;
+		}
+	}
+	if (boatVX>0)
+	{
+		if (man.scale.x>-1) man.scale.x -= 0.1;
+	}
+	else
+	{
+		if (man.scale.x<1) man.scale.x += 0.1;
+	}
+	
+	boatVX *= 0.98;
+
+	boatX += boatVX;
+	boatVA += Math.sin(TIME*0.05)*0.0002 - Math.sin(boat.rotation) * 0.01 - boatVX * 0.0001;
+	boatVA *= 0.9;
+	
+	man.x = boat.x = boatX - SCROLLX;
+	man.y = boat.y = boatY - SCROLLY;
+	boat.rotation += boatVA;
+	
+	C.lineStyle(9,0xd6ae77);
+	C.moveTo(boat.x+16*man.scale.x,boat.y-23);
+	C.lineTo(boat.x-vx*5,boat.y-30-vy*1.5);
+	C.lineStyle(5,0x884400);
+	C.lineTo(boat.x+vx*20,boat.y+vy*6);
+	C.lineStyle(12,0x884400);
+	C.lineTo(boat.x+vx*30,boat.y+10+vy*9);
+	
+	C.lineStyle(4,0x224422);
+	C.moveTo(boat.x+man.scale.x*12,boat.y-25);
+	C.lineTo(tox-SCROLLX,toy-SCROLLY);
+	
+	C.lineStyle(2,0x774422);
+	C.lineTo(hx,hy);
+	
+	C.lineStyle(5,0xAAAAAA);
+	if (man.scale.x>0) C.arc(hx, hy+20, 10, 0, 3.14);
+	else C.arc(hx, hy+20, 10, 3.14, 0, true);
 }
 
 function compareNumbers(a, b) {
@@ -1464,7 +1653,7 @@ function randomizePlankton()
 {
 	PLANKTON = [];
 	
-	for (x=1400;x<BOUNDRIGHT-1400;x+=100)
+	for (x=1400;x<BOUNDRIGHT-1400;x+=150)
 	{
 		var le = BOTTOM[Math.floor(x/BOTTOMSIZE)];
 		var ri = BOTTOM[Math.ceil(x/BOTTOMSIZE)];
@@ -1563,7 +1752,7 @@ function startSocket()
 		else setTimeout(function(){waitForFirstPosition(false);},500);
 	}
 	
-	socket.on('updatePlayers',function(fis,sha,delay){
+	socket.on('updatePlayers',function(fis,sha,boa,delay){
 		lastUpdate = TIME;
 		var d = new Date();
 		var timeAhead = mod(1000*d.getSeconds()+d.getMilliseconds()-delay,60)/16.67;
@@ -1588,7 +1777,7 @@ function startSocket()
 			POSTO[i][1] = fis.data[i][1]+Math.sin(dir)*timeAhead*vel;
 			
 			if (FISH[i][8] != fis.data[i][8]) // new fish in - different name
-			{
+			{				
 				FISH[i][0] = POSTO[i][0];
 				FISH[i][1] = POSTO[i][1];
 				FISH[i][3] = POSTO[i][2];
@@ -1612,6 +1801,18 @@ function startSocket()
 			SHARKTO[i][0] = sha.data[i][0]+Math.cos(dir)*timeAhead*vel;
 			SHARKTO[i][1] = sha.data[i][1]+Math.sin(dir)*timeAhead*vel;
 		}
+		
+		boatVX = boa.vx;
+		boatX = (boatX + boa.x+boatVX*timeAhead)/2;
+		boatTargetX = boa.tx;
+		//boatWaitTarget = boa.wt;
+		//boatStop = boa.s;
+		rodUp = boa.ru;
+		hookVX = boa.hvx;
+		hookVY = boa.hvy;
+		hookXTo = boa.hx+hookVX*timeAhead;
+		hookYTo = boa.hy+hookVY*timeAhead;
+		veinLen = boa.vl;
 	});
 }
 		</script>
