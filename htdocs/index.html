@@ -1008,6 +1008,8 @@ function moveBoat()
 	var hx = hookX-SCROLLX;
 	var hy = hookY-SCROLLY;
 	
+	boatX = boatX * SOFT + boatXTo * (1-SOFT);
+	
 	if (Math.abs(boatX-boatTargetX)<100)
 	{
 		if (hookY>0 && veinLen>0)
@@ -1104,7 +1106,6 @@ function moveBoat()
 		{
 			boatVX-=0.04;
 		}
-		boatX = boatX * SOFT + boatXTo * (1-SOFT);
 	}
 	if (boatVX>0)
 	{
