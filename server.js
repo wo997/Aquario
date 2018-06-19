@@ -332,17 +332,20 @@ function HANDLEGAME()
 				hookVY *=0.98;
 				hookVX -= 0.2*whereGoes*Math.random();
 				
-				for (a=0;a<FISH.length;a++)
+				if (huntId == -1)
 				{
-					if (i==a) continue;
-					var dx = FISH[a][0]-hookX;
-					var dy = FISH[a][1]-hookY-25;
-					var s2 = getSize(FISH[a][2]);
-					
-					if (dx*dx+dy*dy < squared(10+s2*19))
+					for (a=0;a<FISH.length;a++)
 					{
-						huntId = a;
-						boatWaitTarget = 0;
+						if (i==a) continue;
+						var dx = FISH[a][0]-hookX;
+						var dy = FISH[a][1]-hookY-25;
+						var s2 = getSize(FISH[a][2]);
+						
+						if (dx*dx+dy*dy < squared(12+s2*21))
+						{
+							huntId = a;
+							boatWaitTarget = 0;
+						}
 					}
 				}
 			}
