@@ -247,6 +247,7 @@ function disconnectPlayer(i)
 	FISH[i] = [0,0,0,0,0,0,0,0,"",0,0];
 	slotID[i] = 0;
 	SLOTS[i] = false;
+	if (huntId == i) huntId = -1;
 }
 
 function CREATELEVEL()
