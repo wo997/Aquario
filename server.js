@@ -27,12 +27,25 @@ SHARK.push([6000,500,5,3,0,1]);
 SHARK.push([8000,500,5,3,0,1]);
 SHARK.push([1500,300,5,3,0,1]);
 
+var boatX = 3000;
+var boatVX = 0;
+var boatTargetX = 2800;
+var boatWaitTarget = 0;
+var boatStop = false;
+var rodUp = 0;
+var hookX = 0;
+var hookY = 0;
+var hookVX = 0;
+var hookVY = 0;
+var veinLen = 0;
+var huntId = -1; // USE LATER
+
 var BOTTOM = [];
 const BOTTOMSIZE = 50;
 const BOUNDRIGHT = 13000;
 var BOTTOMKEY;
 
-var time = 0;
+var TIME = 0;
 
 function randomizeBottom()
 {
@@ -194,15 +207,13 @@ function lose(i,get)
 
 function isSafe(x,y)
 {
-	var safe = true;
 	for (a=0;a<FISH.length;a++)
 	{
 		var dx = FISH[a][0]-x;
 		var dy = FISH[a][1]-y;
 		if (dx*dx+dy*dy<500000)
 		{
-			safe = false;
-			break;
+			return false;
 		}
 	}
 	
@@ -212,11 +223,17 @@ function isSafe(x,y)
 		var dy = SHARK[a][1]-y;
 		if (dx*dx+dy*dy<500000)
 		{
-			safe = false;
-			break;
+			return false;
 		}
 	}
-	return safe;
+	
+	var dx = boatX-x;
+	if (dx*dx+y*y<500000)
+	{
+		return false;
+	}
+	
+	return true;
 }
 
 function disconnectPlayer(i)
@@ -247,12 +264,132 @@ function getSize(s)
 
 function HANDLEGAME()
 {
-	time++;
+	TIME++;
+	
+	var whereGoes = (boatVX>0?-1:1);
+	var high = Math.atan(rodUp-6);
+	var tox = boatX-whereGoes*(65-(high+1.2)*(high+1.2)*2);
+	var toy = -50-20*high;
+	
+	if (veinLen==0)
+	{
+		hookX = tox;
+		hookY = toy;
+	}
+	
+	if (Math.abs(boatX-boatTargetX)<100)
+	{		
+		if (boatStop)
+		{
+			if (TIME>boatWaitTarget && rodUp==0)
+			{
+				boatStop = false;
+				boatTargetX += 0.5*(1000+500*Math.random()) * (Math.floor(Math.random())*2-1); // 1000 - 1500 pixels left or right
+				// ONLY HALF NOW REMOVE LATER PLS
+				if (boatTargetX < 2200)  boatTargetX += 3000;
+				if (boatTargetX > BOUNDRIGHT-2200)  boatTargetX -= 3000;
+			}
+		}
+		else
+		{
+			boatWaitTarget = TIME+500;;
+			boatStop = true;
+		}
+		if (rodUp<12 || TIME>boatWaitTarget)
+		{			
+			if (TIME<=boatWaitTarget)
+			{
+				hookX = tox;
+				hookY = toy;
+				veinLen = 340+Math.round(Math.random()*25)*4;
+				hookVX = -whereGoes*5;
+				hookVY = 0;
+				rodUp += 0.2;
+			}
+			else
+			{
+				if (veinLen>0) veinLen-=4;
+				else
+				{
+					if (rodUp>0) rodUp -= 0.2;
+					else rodUp = 0;						
+				}
+			}
+		}
+		else 
+		{
+			rodUp = 12;
+			hookVY += 0.4;
+			hookX += hookVX*2;
+			hookY += hookVY*2;
+		}
+		
+		if (veinLen>0)
+		{
+			if (hookY>0)
+			{
+				hookVY *=0.98;
+				hookVX -= 0.2*whereGoes*Math.random();
+				
+				for (a=0;a<FISH.length;a++)
+				{
+					if (i==a) continue;
+					var dx = FISH[a][0]-hookX;
+					var dy = FISH[a][1]-hookY-25;
+					var s2 = getSize(FISH[a][2]);
+					
+					if (dx*dx+dy*dy < squared(10+s2*19))
+					{
+						huntId = a;
+						boatWaitTarget = 0;
+					}
+				}
+			}
+			
+			var vex = hookX-tox;
+			var vey = hookY-toy;
+			
+			var len = Math.sqrt(vex*vex+vey*vey);
+			var distance = veinLen-len;
+			
+			if (distance<0)
+			{
+				hookVX *=0.9;
+				hookVY *=0.9;
+				hookX += 0.51*vex/len*distance;
+				hookY += 0.51*vey/len*distance;
+			}
+		}
+	}
+	else
+	{
+		if (boatX<boatTargetX) boatVX+=0.04;
+		else boatVX-=0.04;
+	}
+	boatVX *= 0.98;
+	boatX += boatVX;	
 	
 	for (i=0;i<FISH.length;i++)
 	{
-		//console.log(i+" "+FISH[i][0]);
 		if (FISH[i][0]==0) continue;
+		
+		if (huntId == i)
+		{
+			FISH[i][0] = hookX;
+			FISH[i][1] = hookY+25;
+			FISH[i][4] = 0.3*(mod(FISH[i][4]+Math.PI/2,2*Math.PI)-Math.PI);
+			FISH[i][3] = 0;
+			if (veinLen==0)
+			{
+				huntId = -1;
+				lose(i,100000);
+			}
+			
+			if (FISH[i][9]>0)
+			{
+				continue;
+			}
+		}
 		
 		var fish = FISH[i];
 		var dir = fish[4];
@@ -269,14 +406,10 @@ function HANDLEGAME()
 		
 		FISH[i][2] -= 0.00004*(SIZE-0.7)*(120-FISH[i][9]);
 		
-		/*for (a=0;a<PLANKTON.length;a++)
+		if (huntId != i && FX>boatX-125 && FX<boatX+120 && FY<-10 && FY>-25 && SIN>0)
 		{
-			if (Math.pow(PLANKTON[a][0]-FX,2)+Math.pow(PLANKTON[a][1]-FY,2)<SIZE*SIZE*100+50)
-			{
-				PLANKTON.splice(a,1);
-				FISH[i][2] += 0.1;
-			}
-		}*/
+			lose(i,100000);
+		}
 		
 		for (a=0;a<FISH.length;a++)
 		{
@@ -359,8 +492,8 @@ function HANDLEGAME()
 		}
 	}
 	
-	var len = 270 + 80 * Math.sin(time*0.02);
-	var shift = 150 + 80 * Math.sin(time*0.0066);
+	var len = 270 + 80 * Math.sin(TIME*0.02);
+	var shift = 150 + 80 * Math.sin(TIME*0.0066);
 	
 	for (i=0;i<SHARK.length;i++)
 	{
@@ -473,7 +606,7 @@ function HANDLEGAME()
 				SHARK[i][3] += much * SIN * 0.05;
 			}
 		}
-		else SHARK[i][3] = SHARK[i][3]*0.81 + 0.5 + 0.2 * Math.sin(i+time*0.005);
+		else SHARK[i][3] = SHARK[i][3]*0.81 + 0.5 + 0.2 * Math.sin(i+TIME*0.005);
 		
 		SIN = Math.sin(SHARK[i][5]);
 		COS = Math.cos(SHARK[i][5]);
@@ -494,6 +627,19 @@ function HANDLEGAME()
 	
 	PLAYERS.data = FISH;
 	SENDSHARKS.data = SHARK;
+	var BOAT = {
+		x: boatX,
+		vx: boatVX,
+		tx: boatTargetX,
+		//wt: boatWaitTarget,
+		//s: boatStop,
+		ru: rodUp,
+		hx: hookX,
+		hy: hookY,
+		hvx: hookVX,
+		hvy: hookVY,
+		vl: veinLen
+	};
 	
 	var d = new Date();
 	var delay = 1000*d.getSeconds()+d.getMilliseconds();
@@ -504,7 +650,7 @@ function HANDLEGAME()
 		once = 0;
 		io.emit('updatePlayers',PLAYERS,SENDSHARKS,delay);
 	}*/
-	io.emit('updatePlayers',PLAYERS,SENDSHARKS,delay);
+	io.emit('updatePlayers',PLAYERS,SENDSHARKS,BOAT,delay);
 	
 	setTimeout(HANDLEGAME,1000/30);
 }
@@ -518,11 +664,11 @@ function squared(n)
 
 function sensor(x,y)
 {
-	return (y<0 || y>BOTTOM[Math.round(x/BOTTOMSIZE)]);
+	return (y<0 || y>BOTTOM[Math.round(x/BOTTOMSIZE)] || (x>boatX-450 && x<boatX+450 && y<300));
 }
 
-function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+function TIMEout(ms) {
+    return new Promise(resolve => setTIMEout(resolve, ms));
 }
 function mod(a,b)
 {
