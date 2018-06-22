@@ -241,10 +241,8 @@ function setAlpha(op)
 			1px 1px 0 rgba(0,0,0,0.6);
 	}
 	font{
-		color: #3b3;
+		color: #3b6;
 		position: relative;
-	}
-	#f1,#f2,#f3,#f6,#f7,#f8{
 		margin-right: -8px;
 	}
 </style>
@@ -256,16 +254,14 @@ function setAlpha(op)
 			<canvas id="game-canvas" width="1000" height="600"></canvas>
 			<div id=lol style="padding-top: 40px;background-color:transparent;position:absolute;opacity:1">
 				<div id=menu style="padding: 20px; height: 400px; width: 320px; margin-top: 20%;">
-					<div style="font-family: Baloo; font-size: 50px; text-align: center;width: 100%; font-weight: bold;" class="textShadow">
-						<font id = "f1">T</font>
-						<font id = "f2">i</font>
-						<font id = "f3">m</font>
-						<font id = "f4">e</font>
-						<font id = "f5">2</font>
-						<font id = "f6">S</font>
-						<font id = "f7">w</font>
-						<font id = "f8">i</font>
-						<font id = "f9">m</font>
+					<div style="font-family: Baloo; font-size: 58px; text-align: center;width: 100%; font-weight: bold;" class="textShadow">
+						<font id = "f1">A</font>
+						<font id = "f2">q</font>
+						<font id = "f3">u</font>
+						<font id = "f4">a</font>
+						<font id = "f5">r</font>
+						<font id = "f6">i</font>
+						<font id = "f7">o</font>
 					</div>
 					<br><br>
 					<input type=text id=nickname maxlength=18 autofocus/>
@@ -329,7 +325,7 @@ function setAlpha(op)
 		var ele = document.getElementById("lol");
 		
 		var letters = [];
-		for (i=0;i<9;i++) {
+		for (i=0;i<7;i++) {
 			letters[i] = document.getElementById("f"+(i+1));
 		}
 		</script>
@@ -356,6 +352,7 @@ var hookY = 0;
 var hookVX = 0;
 var hookVY = 0;
 var veinLen = 0;
+var veinStretch = 0;
 
 var PLAYERID = -1;
 
@@ -835,7 +832,10 @@ function update(time)
 				px += 5*Math.sin(px*0.01+TIME*0.05);
 				if (dis(px-mouthX,PLANKTON[a][1]-mouthY) < SIZE*SIZE*250+20)
 				{
-					socket.emit("tasty",0.1);
+					if (PLANKTON[a][2] == 0)
+						socket.emit("tasty");
+					else
+						socket.emit("yummy");
 					
 					var x = Math.random()*(BOUNDRIGHT-2800)+1400;
 					if (x-SCROLLX>-10 && x-SCROLLX<WIDTH+10)
@@ -974,7 +974,7 @@ function update(time)
 	}
 	else
 	{
-		for (i=0;i<9;i++) {
+		for (i=0;i<7;i++) {
 			letters[i].style.top = Math.round(11*Math.sin(TIME*0.04+i*0.7))+"px";
 		}
 		setF();
@@ -1012,9 +1012,9 @@ function moveBoat()
 	
 	if (Math.abs(boatX-boatTargetX)<100)
 	{
-		if (hookY>0 && veinLen>0)
+		if (veinLen>0)
 		{			
-			hookVY *=0.99;
+			hookVY *= 0.99;
 			hookVX -= 0.05*man.scale.x;
 			
 			var vex = hookX-tox;
@@ -1023,13 +1023,19 @@ function moveBoat()
 			var len = Math.sqrt(vex*vex+vey*vey);
 			var distance = veinLen-len;
 			
-			if (distance<0)
+			/*if (distance<0)
 			{
 				hookVX *=0.95;
 				hookVY *=0.95;
 				hookX += 0.05*vex/len*distance;
 				hookY += 0.05*vey/len*distance;
+			}*/
+			
+			if (distance<3)
+			{
+				if (veinLen<340 && veinStretch>0 || veinStretch>40) veinStretch -=4;
 			}
+			else if (veinStretch<80) veinStretch += 4;
 		}
 		/*if (boatStop)
 		{
@@ -1073,6 +1079,7 @@ function moveBoat()
 			hookY += hookVY;
 		}
 		
+
 		if (veinLen>0)
 		{
 			if (hookY>0)
@@ -1139,7 +1146,7 @@ function moveBoat()
 	C.lineTo(tox-SCROLLX,toy-SCROLLY);
 	
 	C.lineStyle(2,0x774422);
-	C.lineTo(hx,hy);
+	C.quadraticCurveTo(tox-SCROLLX,toy+veinStretch-SCROLLY,hx,hy);
 	
 	C.lineStyle(5,0xAAAAAA);
 	if (man.scale.x>0) C.arc(hx, hy+20, 10, 0, 3.14);
@@ -1656,6 +1663,7 @@ function randomizePlankton()
 {
 	PLANKTON = [];
 	
+	var extra = 0;
 	for (x=1400;x<BOUNDRIGHT-1400;x+=150)
 	{
 		var le = BOTTOM[Math.floor(x/BOTTOMSIZE)];
@@ -1664,7 +1672,16 @@ function randomizePlankton()
 		
 		var y = Math.random() * (ri-100) + 50;
 		
-		PLANKTON.push([x+Math.random()*20-10,y+Math.random()*20-10]);
+		var type = 0;
+		
+		extra++;
+		if (extra>10)
+		{
+			extra = 0;
+			type = 1;
+		}
+		
+		PLANKTON.push([x+Math.random()*20-10,y+Math.random()*20-10,type]);
 	}
 }
 
@@ -1674,12 +1691,27 @@ function renderPlankton()
 	C.beginFill(0x339955);
 	for (i=0;i<PLANKTON.length;i++)
 	{
+		if (PLANKTON[i][2] != 0) continue;
 		var px = PLANKTON[i][0];
 		px += 5*Math.sin(px*0.01+TIME*0.05);
 		var mx = px-SCROLLX;
 		var my = PLANKTON[i][1]-SCROLLY;
 		if (mx>-10 && mx<WIDTH+10 && my>-10 && my<HEIGHT+10)
 			C.drawCircle(mx,my,6+i%3);
+	}
+	C.endFill();
+	
+	C.lineStyle(2, 0x99CC22);
+	C.beginFill(0xAAEE33);
+	for (i=0;i<PLANKTON.length;i++)
+	{
+		if (PLANKTON[i][2] != 1) continue;
+		var px = PLANKTON[i][0];
+		px += 5*Math.sin(px*0.01+TIME*0.05);
+		var mx = px-SCROLLX;
+		var my = PLANKTON[i][1]-SCROLLY;
+		if (mx>-10 && mx<WIDTH+10 && my>-10 && my<HEIGHT+10)
+			C.drawCircle(mx,my,10);
 	}
 	C.endFill();
 }
