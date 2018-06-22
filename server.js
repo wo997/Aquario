@@ -90,9 +90,17 @@ io.on('connection',function(s){
 			FISH[s.playerid][7] = boost;
 		}
 	});
-	s.on('tasty',function(get){
+	/*s.on('tasty',function(get){
 		if (typeof get != "number") return;
 		gain(s.playerid,get);
+	});*/
+	s.on('tasty',function(){
+		gain(s.playerid,0.1);
+	});
+	s.on('yummy',function(){
+		gain(s.playerid,0.1);
+		FISH[s.playerid][10] += 25;
+		if (FISH[s.playerid][10] > 100) FISH[s.playerid][10] = 100;
 	});
 	s.on('chat',function(mess){
 		if (mess.length<70)
@@ -100,6 +108,17 @@ io.on('connection',function(s){
 			if (mess.length>35)
 			{
 				var split = Math.floor(mess.length/2);
+				if (mess[split]!=" ")
+				{
+					if (mess[split-1]==" ") split--;
+					else if (mess[split+1]==" ") split++;
+					else
+					{
+						if (mess[split-2]==" ") split-=2;
+						else if (mess[split+2]==" ") split+=2;
+						
+					}
+				}
 				io.emit("chat",FISH[s.playerid][8]+": "+mess.substr(0,split));
 				io.emit("chat",FISH[s.playerid][8]+": "+mess.substr(split));
 			}
@@ -410,7 +429,7 @@ function HANDLEGAME()
 		
 		FISH[i][2] -= 0.00004*(SIZE-0.7)*(120-FISH[i][9]);
 		
-		if (huntId != i && FX>boatX-125 && FX<boatX+120 && FY<-10 && FY>-25 && SIN>0)
+		if (huntId != i && FX>boatX-130+SIZE*10 && FX<boatX+125-SIZE*10 && FY+10*SIZE<-20 && FY+10*SIZE>-28 && SIN>0)
 		{
 			lose(i,100000);
 		}
@@ -557,7 +576,7 @@ function HANDLEGAME()
 					
 					var dx = FISH[a][0]-FX;
 					var dy = FISH[a][1]-FY;
-					if (dx*dx+dy*dy < SIZE*SIZE*550)
+					if (dx*dx+dy*dy < SIZE*SIZE*1050)
 					{
 						SHARK[i][3] *= 0.7;
 					}
