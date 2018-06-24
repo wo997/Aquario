@@ -748,8 +748,7 @@ function update(time)
 				if (turn>1) turn = 1;
 				if (turn<-1) turn = -1;
 				
-				SHARK[i][4] += deltaTime*turn/(20+20*SIZE); // smoothen
-				//SHARK[i][4] += deltaTime*turn/(10+10*SIZE);
+				SHARK[i][4] += deltaTime*turn/(10+10*SIZE);
 			}
 			
 			var how = mod(FX/BOTTOMSIZE,1);
@@ -812,16 +811,18 @@ function update(time)
 			COLOR.g = col%256;
 			col = (col - COLOR.g)/256;
 			COLOR.r = col%256;
-			FISH[i][0] = (FX + VEL*COS*deltaTime) * SOFT + POSTO[i][0] * (1-SOFT);
-			FISH[i][1] = (FY + VEL*SIN*deltaTime) * SOFT + POSTO[i][1] * (1-SOFT);
+			POSTO[i][0] += VEL*COS*deltaTime;
+			POSTO[i][1] += VEL*SIN*deltaTime;
+			/*FISH[i][0] = (FX + VEL*COS*deltaTime) * SOFT + POSTO[i][0] * (1-SOFT);
+			FISH[i][1] = (FY + VEL*SIN*deltaTime) * SOFT + POSTO[i][1] * (1-SOFT);*/
+			FISH[i][0] = FX * SOFT + POSTO[i][0] * (1-SOFT);
+			FISH[i][1] = FY * SOFT + POSTO[i][1] * (1-SOFT);
 			FISH[i][3] = VEL * SOFT + POSTO[i][2] * (1-SOFT);
 			FISH[i][4] = dir * SOFT + POSTO[i][3] * (1-SOFT);
 			FISH[i][2] = fish[2] * SOFT + POSTO[i][4] * (1-SOFT);
 			
 			var mouthX = FX + COS*SIZE*18;
 			var mouthY = FY + SIN*SIZE*18;
-			
-			FISH[i][2] -= 0.00001*(SIZE-0.7)*(200-FISH[i][9]);
 			
 			if (getSmaller<0.99 && i==PLAYERID)
 			{
@@ -856,28 +857,8 @@ function update(time)
 					var y = Math.random() * (ri-100) + 50;
 					
 					PLANKTON[a]=[x,y];
-					//FISH[i][2] += 0.1;
 				}
 			}
-			
-			/*for (a=i+1;a<FISH.length;a++)
-			{
-				var s2 = 0.7*Math.pow(FISH[a][2],0.4);
-				if (Math.pow(FISH[a][0]-FX,2)+Math.pow(FISH[a][1]-FY,2)<Math.pow(SIZE+s2,2)*100+50)
-				{
-					if (SIZE > s2)
-					{
-						FISH[i][2] += s2;
-						FISH.splice(a,1);
-					}
-					else
-					{
-						FISH[a][2] += SIZE;
-						FISH.splice(i,1);
-						continue;
-					}
-				}
-			}*/
 			
 			if (FY > SIZE * 5.9)
 			{
@@ -885,11 +866,11 @@ function update(time)
 				if (turn>1) turn = 1;
 				if (turn<-1) turn = -1;
 				
-				FISH[i][4] += deltaTime*turn/(10+2*SIZE);
+				POSTO[i][3] += deltaTime*turn/(10+2*SIZE);
 				
 				if (FISH[i][7] && FISH[i][10]>0.5)
 				{
-					FISH[i][3] += 0.25;
+					POSTO[i][2] += 0.25;
 					FISH[i][10] -= 0.5;
 				}
 			}
@@ -903,16 +884,16 @@ function update(time)
 			if (FY > bottom)
 			{
 				var much = (FY - bottom)*0.3;
-				FISH[i][3] *= 1-0.01*much*deltaTime;
-				FISH[i][0] += much * (ri-le)/BOTTOMSIZE * deltaTime;
-				FISH[i][1] -= much * deltaTime;
+				POSTO[i][2] *= 1-0.01*much*deltaTime;
+				POSTO[i][0] += much * (ri-le)/BOTTOMSIZE * deltaTime;
+				POSTO[i][1] -= much * deltaTime;
 				
 				much = SIZE * 6 - FY;
 				if (much>0)
 				{
 					if (much>5) much = 5;
-					FISH[i][4] += SIN * (COS<0?1:-1) * 0.02 * much;
-					FISH[i][3] *= 1 - 0.03*deltaTime;
+					POSTO[i][3] += SIN * (COS<0?1:-1) * 0.02 * much;
+					POSTO[i][2] *= 1 - 0.03*deltaTime;
 					FISH[i][9] -= 0.5 * deltaTime;
 				}
 			}
@@ -922,16 +903,16 @@ function update(time)
 				if (much>0)
 				{
 					if (much>5) much = 5;
-					FISH[i][4] += much * (COS>0?0.02:-0.02)/(Math.abs(VEL)+0.1) * deltaTime;
-					FISH[i][3] += much * SIN * 0.025 * deltaTime;
-					FISH[i][1] += 0.1;
+					POSTO[i][3] += much * (COS>0?0.02:-0.02)/(Math.abs(VEL)+0.1) * deltaTime;
+					POSTO[i][2] += much * SIN * 0.025 * deltaTime;
+					POSTO[i][0] += 0.1;
 				}
 			}
-			else FISH[i][3] = FISH[i][3]*0.9 + 0.25;
+			else POSTO[i][2] = POSTO[i][2]*0.9 + 0.25;
 			
 			if (FISH[i][9]<=0)
 			{
-				FISH[i][3] = 0;
+				POSTO[i][2] = 0;
 				FISH[i][9] = 0;
 			}
 			else
@@ -1028,13 +1009,13 @@ function moveBoat()
 			var len = Math.sqrt(vex*vex+vey*vey);
 			var distance = veinLen-len;
 			
-			/*if (distance<0)
+			if (distance<0)
 			{
 				hookVX *=0.95;
 				hookVY *=0.95;
-				hookX += 0.05*vex/len*distance;
-				hookY += 0.05*vey/len*distance;
-			}*/
+				hookXTo += 0.3*vex/len*distance;
+				hookYTo += 0.3*vey/len*distance;
+			}
 			
 			if (distance<3)
 			{
