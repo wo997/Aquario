@@ -632,6 +632,10 @@ function startGame()
 	
 	man.scale.x = (boatVX>0?-1:1);
 	
+	boatX = boatXTo;
+	hookX = hookXTo;
+	hookY = hookYTo;
+	
 	fadeOutMenu();
 	//loop();
 	canvas.focus();
@@ -744,7 +748,8 @@ function update(time)
 				if (turn>1) turn = 1;
 				if (turn<-1) turn = -1;
 				
-				SHARK[i][4] += deltaTime*turn/(10+10*SIZE);
+				SHARK[i][4] += deltaTime*turn/(20+20*SIZE); // smoothen
+				//SHARK[i][4] += deltaTime*turn/(10+10*SIZE);
 			}
 			
 			var how = mod(FX/BOTTOMSIZE,1);
@@ -1013,9 +1018,9 @@ function moveBoat()
 	if (Math.abs(boatX-boatTargetX)<100)
 	{
 		if (veinLen>0)
-		{			
-			hookVY *= 0.99;
-			hookVX -= 0.05*man.scale.x;
+		{
+			hookXTo += hookVX;
+			hookYTo += hookVY;
 			
 			var vex = hookX-tox;
 			var vey = hookY-toy;
