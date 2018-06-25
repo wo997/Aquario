@@ -1,9 +1,32 @@
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
-const io = require('socket.io')(http); //bilbio do socketa - nmp install --save socket.io
+const io = require('socket.io')(http);
+/*const numCPUs = require('os').cpus().length;
+const cluster = require('cluster');
 
-app.get('/', function(req, res){ //ładuje index.html zamiast domyślnie
+
+if (cluster.isMaster) {
+  console.log(`Master ${process.pid} is running`);
+
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+  });
+  
+  return;
+}
+
+
+console.log(`Worker ${process.pid} is running`);
+
+console.log(numCPUs);
+*/
+app.get('/', function(req, res){
   res.sendFile(__dirname + '/htdocs/index.html');
 });
 
@@ -38,7 +61,7 @@ var hookY = 0;
 var hookVX = 0;
 var hookVY = 0;
 var veinLen = 0;
-var huntId = -1; // USE LATER
+var huntId = -1;
 
 var BOTTOM = [];
 const BOTTOMSIZE = 50;
@@ -364,6 +387,10 @@ function HANDLEGAME()
 						{
 							huntId = a;
 							boatWaitTarget = 0;
+							
+							var dir = FISH[a][4];
+							hookVX += Math.cos(dir)*7;
+							hookVY += Math.sin(dir)*7;
 						}
 					}
 				}
@@ -377,10 +404,10 @@ function HANDLEGAME()
 			
 			if (distance<0)
 			{
-				hookVX *=0.9;
-				hookVY *=0.9;
-				hookX += 0.51*vex/len*distance;
-				hookY += 0.51*vey/len*distance;
+				hookVX *= 0.9;
+				hookVY *= 0.9;
+				hookX += 0.6*vex/len*distance;
+				hookY += 0.6*vey/len*distance;
 			}
 		}
 	}
@@ -402,6 +429,9 @@ function HANDLEGAME()
 			FISH[i][1] = hookY+25;
 			FISH[i][4] += 0.3*(mod(FISH[i][4]+Math.PI/2,2*Math.PI)-Math.PI);
 			FISH[i][3] = 0;
+				
+			var dir = FISH[i][4];
+			
 			if (veinLen==0)
 			{
 				huntId = -1;
@@ -472,13 +502,13 @@ function HANDLEGAME()
 		var how = mod(FX/BOTTOMSIZE,1);
 		var le = BOTTOM[Math.floor(FX/BOTTOMSIZE)];
 		var ri = BOTTOM[Math.ceil(FX/BOTTOMSIZE)];
-		var bottom = le*(1-how) + ri*how - SIZE * 12;
+		var bottom = le*(1-how) + ri*how - SIZE * 19;
 		if (FY > bottom)
 		{
-			var much = (FY - bottom)*0.3;
+			var much = (FY - bottom)*0.6;
 			FISH[i][3] *= 1-0.02*much;
-			FISH[i][0] += much * (ri-le)/BOTTOMSIZE;
-			FISH[i][1] -= much;
+			FISH[i][0] += 2 * much * (ri-le)/BOTTOMSIZE;
+			FISH[i][1] -= 2 * much;
 			
 			much = SIZE * 6 - FY;
 			if (much>0)
@@ -673,7 +703,7 @@ function HANDLEGAME()
 		once = 0;
 		io.emit('updatePlayers',PLAYERS,SENDSHARKS,delay);
 	}*/
-	io.emit('updatePlayers',PLAYERS,SENDSHARKS,BOAT,delay);
+	io.emit('updatePlayers',PLAYERS,SENDSHARKS,BOAT,huntId,delay);
 	
 	setTimeout(HANDLEGAME,1000/30);
 }
