@@ -1,11 +1,11 @@
-
-
+<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8">
     <title>Time 2 Swim</title>
 	<link href="https://fonts.googleapis.com/css?family=Baloo" rel="stylesheet">
 	<link rel="shortcut icon" href="htdocs/icon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<script>
 	
 var was = false;
@@ -27,7 +27,7 @@ function setF(){
 		COS = -1;
 		VEL = 0.5;
 	}
-	SIZE = 0.7+3.5*ele.style.opacity;
+	SIZE = 0.7+3.5*OP;
 	type = MYTYPE;
 	
 	wasR = COLOR.r;
@@ -38,21 +38,20 @@ function setF(){
 	COLOR.b = 100;
 	FX += 2;
 	FY += 5;
-	renderFish();
+	renderFish(true);
 	COLOR.r = wasR;
 	COLOR.g = wasG;
 	COLOR.b = wasB;
 	FX -= 2;
 	FY -= 5;
-	renderFish();
+	renderFish(true);
 	
-	var op = ele.style.opacity;
 	var hai = ele.style.paddingTop;
 	var top = +hai.substr(0,hai.length-2)+HEIGHT/2;
 	if (dis(MOUSEX+137-WIDTH/2,MOUSEY-70-HEIGHT/2)<2500)
 	{
-		C.lineStyle(2,0x999999,op);
-		C.beginFill(0xFFFFFF,op);
+		C.lineStyle(2,0x999999,OP);
+		C.beginFill(0xFFFFFF,OP);
 		
 		if (LMB && !was)
 		{
@@ -62,8 +61,8 @@ function setF(){
 	}
 	else
 	{
-		C.lineStyle(2,0x777777,op);
-		C.beginFill(0xDDDDDD,op);
+		C.lineStyle(2,0x777777,OP);
+		C.beginFill(0xDDDDDD,OP);
 	}
 	C.moveTo(-130+WIDTH/2,top);
 	C.lineTo(-150+WIDTH/2,30+top);
@@ -73,8 +72,8 @@ function setF(){
 	
 	if (dis(MOUSEX-137-WIDTH/2,MOUSEY-70-HEIGHT/2)<2500)
 	{
-		C.lineStyle(2,0x999999,op);
-		C.beginFill(0xFFFFFF,op);
+		C.lineStyle(2,0x999999,OP);
+		C.beginFill(0xFFFFFF,OP);
 		
 		if (LMB && !was)
 		{
@@ -84,8 +83,8 @@ function setF(){
 	}
 	else
 	{
-		C.lineStyle(2,0x777777,op);
-		C.beginFill(0xDDDDDD,op);
+		C.lineStyle(2,0x777777,OP);
+		C.beginFill(0xDDDDDD,OP);
 	}
 	C.moveTo(130+WIDTH/2,top);
 	C.lineTo(150+WIDTH/2,30+top);
@@ -138,8 +137,10 @@ function fadeOutMenu(){
 	};
 	anim.f = setInterval(anim.d,16.7);
 };
+var OP = 1;
 function setAlpha(op)
 {
+	OP = op;
 	ele.style.opacity = op;
 	scoreText.alpha = 1-op;
 	scoreMeText.alpha = 1-op;
@@ -155,9 +156,16 @@ function setAlpha(op)
 }
 </script>
 	<style>
-	body {
+	body{
+		transform-origin: bottom left;
+		//transform: rotate(90deg);
+		//top:-100vw;
+		
+		//left:-100vh;
+		//height:100vw;
+		//width:100vh;
+		
 		background-color: #4477bb;
-		width: 100%;
 		padding: 0px;
 		margin: 0px;
 		position: fixed;
@@ -198,12 +206,6 @@ function setAlpha(op)
 	.csH:hover{
 		border: 3px white solid;
 	}
-	#container
-	{
-		width: 1000px;
-		margin-left: auto;
-		margin-right: auto;
-	}
 	button,input,select{
 		border: 1px black solid;
 		height: 40px;
@@ -217,6 +219,7 @@ function setAlpha(op)
 		border-radius: 20px 0 0 20px;
 		text-indent: 15px;
 		font-family: lucida console;
+		height: 35px;
 	}
 	#playBtn {
 		background-color: #59f;
@@ -264,7 +267,7 @@ function setAlpha(op)
 						<font id = "f7">o</font>
 					</div>
 					<br><br>
-					<input type=text id=nickname maxlength=18 autofocus/>
+					<input type=text id=nickname maxlength=18 placeholder="Your name..."/>
 					<button class="textShadow" id=playBtn onclick="startSocket();">Play</button>
 					<div id="conn" style="margin-top:5px; visibility: hidden">Connecting...</div>
 					<div id=customize style="margin-top: 250px; width: 320px;">
@@ -286,6 +289,8 @@ function setAlpha(op)
 			</div>
 			<canvas id="canvasText" width="0" height="0"></canvas>
 			<audio src="htdocs/bubble.wav" type="audio/wav" id="bubble">
+			<audio src="htdocs/bite.wav" type="audio/wav" id="bite">
+			<audio src="htdocs/point.wav" type="audio/wav" id="point">
 		</div>
 		<script>
 		var node = document.getElementById('nickname');
@@ -400,14 +405,38 @@ function RELOAD()
 	setTimeout(null,100000);
 }
 
+var body;
+var vertical = false;
 function resize() {	
     WIDTH = window.innerWidth;
     HEIGHT = window.innerHeight;
 	
-	if (WIDTH<640) WIDTH = 640;
+	vertical = (WIDTH<HEIGHT); // && isMobile);
+	if (vertical)
+	{
+		var temp = HEIGHT;
+		HEIGHT = WIDTH;
+		WIDTH = temp;
+		
+		//body.style.width = HEIGHT;
+		//body.style.height = WIDTH;
+		
+		body.style.transform = "rotate(90deg)";
+		body.style.top = "-"+(HEIGHT+22)+"px";
+		body.style.left = "-22px";
+	}
+	else
+	{	
+		body.style.transform = "rotate(0deg)";
+		body.style.top = "0";
+		body.style.left = "0";
+	}
+	
+	
+	/*if (WIDTH<640) WIDTH = 640;
 	if (WIDTH>1600) WIDTH = 1600;
 	if (HEIGHT<480) HEIGHT = 480;
-	if (HEIGHT>1000) HEIGHT = 1000;
+	if (HEIGHT>1000) HEIGHT = 1000;*/
 	
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
@@ -433,8 +462,37 @@ function resize() {
 	highScoreText.x = WIDTH/2;
 	highScoreText.y = HEIGHT/2+150;
 }
+
+var isMobile = false;
 function init() {
 	stage = new PIXI.Container();
+	
+	if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
+		|| /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) { 
+		isMobile = true;
+		
+		document.body.addEventListener('touchmove', function(event) {
+			if (event.touches.length>0)
+			{
+				var px = event.touches[0].pageX;
+				var py = event.touches[0].pageY;
+				
+				if (vertical)
+				{
+					var off = (WIDTH-HEIGHT)/2;
+					MOUSEY = WIDTH-px-off;
+					MOUSEX = py+off;
+				}
+				else
+				{	
+					MOUSEX = px;
+					MOUSEY = py;
+				}
+			}
+		}, false);
+	}
+	
+	body = document.getElementsByTagName("body")[0];
 	
 	canvas = document.getElementById("game-canvas");
 	contextText = document.getElementById("canvasText").getContext('2d');
@@ -446,6 +504,8 @@ function init() {
 	window.addEventListener("keydown", keyDown);
 	
 	bubbleSnd = document.getElementById('bubble');
+	biteSnd = document.getElementById('bite');
+	pointSnd = document.getElementById('point');
 	
 	skywater = new PIXI.Sprite(PIXI.Texture.fromImage("htdocs/skywater.png"));
 	skywater.position.x = 0;
@@ -578,6 +638,8 @@ function init() {
 	
 	requestAnimationFrame(update);
 	
+	//update();
+	
 	var col = arel[Math.floor((arel.length-0.01)*Math.random())].style.backgroundColor;
 	heh(col);
 	
@@ -596,6 +658,8 @@ var HEIGHT = 600;
 var SCROLLX = 600;
 var SCROLLY = -200;
 var TIME = 0;
+
+var huntId = -1;
 
 var gameStarted = false;
 var justStarted = false;
@@ -631,6 +695,7 @@ function startGame()
 	//boatStop = true;
 	
 	man.scale.x = (boatVX>0?-1:1);
+	huntId = -1;
 	
 	boatX = boatXTo;
 	hookX = hookXTo;
@@ -710,38 +775,16 @@ function update(time)
 			var mouthX = FX + COS*SIZE*18;
 			var mouthY = FY + SIN*SIZE*18;
 			
-			SHARK[i][0] = (FX + vel*COS*deltaTime) * SOFT + SHARKTO[i][0] * (1-SOFT);
-			SHARK[i][1] = (FY + vel*SIN*deltaTime) * SOFT + SHARKTO[i][1] * (1-SOFT);
+			SHARKTO[i][0] += VEL*COS*deltaTime;
+			SHARKTO[i][1] += VEL*SIN*deltaTime;			
+			SHARK[i][0] = FX * SOFT + SHARKTO[i][0] * (1-SOFT);
+			SHARK[i][1] = FY * SOFT + SHARKTO[i][1] * (1-SOFT);
+			//SHARK[i][0] = (FX + vel*COS*deltaTime) * SOFT + SHARKTO[i][0] * (1-SOFT);
+			//SHARK[i][1] = (FY + vel*SIN*deltaTime) * SOFT + SHARKTO[i][1] * (1-SOFT);
 			SHARK[i][3] = VEL * SOFT + SHARKTO[i][2] * (1-SOFT);
 			SHARK[i][4] = dir * SOFT + SHARKTO[i][3] * (1-SOFT);
 			SHARK[i][5] = SHARK[i][5] * SOFT + SHARKTO[i][4] * (1-SOFT);
-			
-			var followClosest = 10000000;
-			
-			for (a=0;a<FISH.length;a++)
-			{
-				if (!FISH[i] || !POSTO[i] || POSTO[i][0]==0) continue;
-			
-				var dx = FISH[a][0]-mouthX;
-				var dy = FISH[a][1]-mouthY;
-				var dist = dis(dx,dy);
-				var s2 = getSize(FISH[a][2]);
-				
-				if (FY>30 && dist<60000)
-				{
-					if (dist < followClosest)
-					{
-						followClosest = dist
-						SHARK[i][5] = Math.atan2(dy,dx);
-					}
-				}
-				
-				if (dist<Math.pow(SIZE*2+s2,2)*25)
-				{
-					FISH[a][9] -= 3/(2+s2)*deltaTime;
-				}
-			}
-			
+						
 			if (FY > SIZE * 5.9)
 			{
 				var turn = (mod(SHARK[i][5]+Math.PI-dir,2*Math.PI)-Math.PI);
@@ -758,16 +801,16 @@ function update(time)
 			if (FY > bottom)
 			{
 				var much = (FY - bottom)*0.3;
-				SHARK[i][3] *= 1-0.01*much*deltaTime;
-				SHARK[i][0] += much * (ri-le)/BOTTOMSIZE * deltaTime;
-				SHARK[i][1] -= much * deltaTime;
+				SHARKTO[i][2] *= 1-0.01*much*deltaTime;
+				SHARKTO[i][0] += much * (ri-le)/BOTTOMSIZE * deltaTime;
+				SHARKTO[i][1] -= much * deltaTime;
 				
 				much = SIZE * 3 - FY;
 				if (much>0)
 				{
 					if (much>5) much = 5;
-					SHARK[i][4] += SIN * (COS<0?1:-1) * 0.02 * much * deltaTime;
-					SHARK[i][3] *= 1 - 0.03*deltaTime;
+					SHARKTO[i][3] += SIN * (COS<0?1:-1) * 0.02 * much * deltaTime;
+					SHARKTO[i][2] *= 1 - 0.03*deltaTime;
 				}
 			}
 			else if (FY < SIZE * 3)
@@ -776,8 +819,8 @@ function update(time)
 				if (much>0)
 				{
 					if (much>5) much = 5;
-					SHARK[i][4] += much * (COS>0?0.01:-0.01)/(Math.abs(VEL)+0.1) * deltaTime;
-					SHARK[i][3] += much * SIN * 0.025 * deltaTime;
+					SHARKTO[i][3] += much * (COS>0?0.01:-0.01)/(Math.abs(VEL)+0.1) * deltaTime;
+					SHARKTO[i][2] += much * SIN * 0.025 * deltaTime;
 				}
 			}
 			else SHARK[i][3] = SHARK[i][3]*(1-0.1*deltaTime) + 0.25*deltaTime;
@@ -811,8 +854,12 @@ function update(time)
 			COLOR.g = col%256;
 			col = (col - COLOR.g)/256;
 			COLOR.r = col%256;
-			POSTO[i][0] += VEL*COS*deltaTime;
-			POSTO[i][1] += VEL*SIN*deltaTime;
+			
+			if (FISH[i][9]>0 && huntId != i)
+			{
+				POSTO[i][0] += VEL*COS*deltaTime;
+				POSTO[i][1] += VEL*SIN*deltaTime;
+			}
 			/*FISH[i][0] = (FX + VEL*COS*deltaTime) * SOFT + POSTO[i][0] * (1-SOFT);
 			FISH[i][1] = (FY + VEL*SIN*deltaTime) * SOFT + POSTO[i][1] * (1-SOFT);*/
 			FISH[i][0] = FX * SOFT + POSTO[i][0] * (1-SOFT);
@@ -842,6 +889,8 @@ function update(time)
 						socket.emit("tasty");
 					else
 						socket.emit("yummy");
+						
+					pointSnd.play();
 					
 					var x = Math.random()*(BOUNDRIGHT-2800)+1400;
 					if (x-SCROLLX>-10 && x-SCROLLX<WIDTH+10)
@@ -880,10 +929,10 @@ function update(time)
 			var how = mod(FX/BOTTOMSIZE,1);
 			var le = BOTTOM[Math.floor(FX/BOTTOMSIZE)];
 			var ri = BOTTOM[Math.ceil(FX/BOTTOMSIZE)];
-			var bottom = le*(1-how) + ri*how - SIZE * 12;
+			var bottom = le*(1-how) + ri*how - SIZE * 19;
 			if (FY > bottom)
 			{
-				var much = (FY - bottom)*0.3;
+				var much = (FY - bottom)*0.6;
 				POSTO[i][2] *= 1-0.01*much*deltaTime;
 				POSTO[i][0] += much * (ri-le)/BOTTOMSIZE * deltaTime;
 				POSTO[i][1] -= much * deltaTime;
@@ -908,17 +957,12 @@ function update(time)
 					POSTO[i][0] += 0.1;
 				}
 			}
-			else POSTO[i][2] = POSTO[i][2]*0.9 + 0.25;
+			else FISH[i][3] = FISH[i][3]*0.9 + 0.25;
 			
 			if (FISH[i][9]<=0)
 			{
 				POSTO[i][2] = 0;
 				FISH[i][9] = 0;
-			}
-			else
-			{
-				FISH[i][9] += 0.03*deltaTime;
-				if (FISH[i][9]>100) FISH[i][9] = 100;
 			}
 			
 			var mx = FX-SCROLLX;
@@ -928,7 +972,7 @@ function update(time)
 				if (my>-25*SIZE && my<HEIGHT+25*SIZE)
 				{
 					type = FISH[i][11];
-					renderFish();
+					renderFish(false);
 				}
 				
 				my = FY-SIZE*33-30-SCROLLY;
@@ -943,12 +987,14 @@ function update(time)
 			else displayNames[i].y = -100;
 			
 			
-			//FX = POSTO[i][0]; FY = POSTO[i][1];	renderFish();
+			//FX = POSTO[i][0]; FY = POSTO[i][1];	renderFish(false);
+					
+			//FX -= COS*10*VEL; FY -= SIN*10*VEL; renderFish(false);
 			
-			//for (p=0;p<20;p++) {renderFish();FX+=25;if (FX>SCROLLX+800) {FX = SCROLLX+200; FY+=25;}}
+			//for (p=0;p<100;p++) {renderFish(false);FX+=25;if (FX>SCROLLX+800) {FX = SCROLLX+200; FY+=25;}}
 		}
 		
-		if (ele.style.opacity>0.05) setF();
+		if (OP>0.05) setF();
 		
 		renderWater();
 		renderBottom();
@@ -1003,6 +1049,13 @@ function moveBoat()
 			hookXTo += hookVX;
 			hookYTo += hookVY;
 			
+			hookVY += 0.2;
+			
+			if (hookY>0)
+			{
+				hookVY *= 0.99;
+			}
+			
 			var vex = hookX-tox;
 			var vey = hookY-toy;
 			
@@ -1023,71 +1076,6 @@ function moveBoat()
 			}
 			else if (veinStretch<80) veinStretch += 4;
 		}
-		/*if (boatStop)
-		{
-			boatTargetX += 0.5*(1000+500*Math.random()) * (Math.floor(Math.random())*2-1); // 1000 - 1500 pixels left or right
-			if (boatTargetX < 2200)  boatTargetX += 3000;
-			if (boatTargetX > BOUNDRIGHT-2200)  boatTargetX -= 3000;
-		}
-		else
-		{
-			//boatWaitTarget = TIME+500;
-			//boatStop = true;
-		}*/
-		
-		/*if (rodUp<12 || TIME>boatWaitTarget)
-		{			
-			if (TIME<=boatWaitTarget)
-			{
-				hookX = tox;
-				hookY = toy;
-				veinLen = 340;
-				hookVX = -man.scale.x*5;
-				hookVY = 0;
-				rodUp += 0.1*deltaTime;
-			}
-			else
-			{
-				if (veinLen>0) veinLen-=2;
-				else
-				{
-					if (rodUp>0) rodUp -= 0.1*deltaTime;
-					else rodUp = 0;						
-				}
-			}
-			
-		}
-		else 
-		{
-			rodUp = 12;
-			hookVY += 0.2;
-			hookX += hookVX;
-			hookY += hookVY;
-		}
-		
-
-		if (veinLen>0)
-		{
-			if (hookY>0)
-			{
-				hookVY *=0.99;
-				hookVX -= 0.05*man.scale.x;
-			}
-			
-			var vex = hookX-tox;
-			var vey = hookY-toy;
-			
-			var len = Math.sqrt(vex*vex+vey*vey);
-			var distance = veinLen-len;
-			
-			if (distance<0)
-			{
-				hookVX *=0.95;
-				hookVY *=0.95;
-				hookX += 0.3*vex/len*distance;
-				hookY += 0.3*vey/len*distance;
-			}
-		}*/
 	}
 	else
 	{
@@ -1146,8 +1134,6 @@ function compareNumbers(a, b) {
 var listOnce = 0;
 function face()
 {
-	//chatText.text = "meoemowemfowemfwoergm\ngenrgoerigneorginergerg\nWEWFWEF\gerge\n\negrergerg\n:P:P:P:P:P:P";
-
 	HPsmooth = HPsmooth*0.8 + FISH[PLAYERID][9]*0.2;
 	O2smooth = O2smooth*0.8 + FISH[PLAYERID][10]*0.2;
 	
@@ -1161,7 +1147,7 @@ function face()
 		var edge = 10;
 		if (0.6*HPsmooth<10) edge = 0.6*HPsmooth;
 		C.lineStyle(null);
-		C.beginFill(0xFF0000, 0.6);
+		C.beginFill(0xFF2222, 0.6);
 		C.drawRoundedRect(25, 32-edge*0.5, 1.2*HPsmooth, 16+edge, edge);
 		C.endFill();
 	}
@@ -1270,7 +1256,7 @@ function rgbToHex(r, g, b) {
     return "0x"+(((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1));
 }
 
-function renderFish()
+function renderFish(myFishCover)
 {
 	var colorOut = rgbToHex(Math.round(COLOR.r*0.8),Math.round(COLOR.g*0.8),Math.round(COLOR.b*0.8));
 	var colorIn = rgbToHex(COLOR.r,COLOR.g,COLOR.b);
@@ -1279,14 +1265,14 @@ function renderFish()
 	var twirl = VEL*1.5*Math.sin(0.15*TIME);
 	var yummy = 3.5*Math.sin(0.1*TIME);
 	
-	if (ele.style.opacity > 0)
+	if (myFishCover && OP > 0)
 	{
 		yummy = 0;
 		
 		if (COLOR.r+COLOR.g+COLOR.b == 157)
 		{
 			C.lineStyle(null);
-			C.beginFill(0x006699,Math.round(ele.style.opacity*10)/10);
+			C.beginFill(0x006699,Math.round(OP*10)/10);
 			C.drawRect(0,0,WIDTH,HEIGHT);
 			C.endFill();
 		}
@@ -1460,7 +1446,7 @@ function control()
 	//var SOFT = deltaTime*0.03;
 	if (SOFT==0) return;
 	
-	//SOFT = 0.95;//(1-ele.style.opacity);
+	//SOFT = 0.95;//(1-OP);
 	
 	SCROLLX = SCROLLX * SOFT + (0.5 * MOUSEX - 0.75 * WIDTH + x) * (1-SOFT);
 	SCROLLY = SCROLLY * SOFT + (0.5 * MOUSEY - 0.75 * HEIGHT + y) * (1-SOFT);
@@ -1540,8 +1526,18 @@ function input()
 {
 	if (getSmaller<0.99) return;
 	var mousePosition = renderer.plugins.interaction.mouse.global;
-	MOUSEX = mousePosition.x;
-	MOUSEY = mousePosition.y;
+	
+	if (vertical)
+	{
+		var off = (WIDTH-HEIGHT)/2;
+		MOUSEY = WIDTH-mousePosition.x-off;
+		MOUSEX = mousePosition.y+off;
+	}
+	else
+	{	
+		MOUSEX = mousePosition.x;
+		MOUSEY = mousePosition.y;
+	}
 }
 
 function mouseDown(e)
@@ -1773,10 +1769,11 @@ function startSocket()
 		else setTimeout(function(){waitForFirstPosition(false);},500);
 	}
 	
-	socket.on('updatePlayers',function(fis,sha,boa,delay){
+	socket.on('updatePlayers',function(fis,sha,boa,hun,delay){
 		lastUpdate = TIME;
 		var d = new Date();
 		var timeAhead = mod(1000*d.getSeconds()+d.getMilliseconds()-delay,60)/16.67;
+		//timeAhead = 0;
 		//FISH = fis.data;
 		//alert(fis.data[0][0].length);
 		for (i=0;i<10;i++) // why 10???
@@ -1784,18 +1781,32 @@ function startSocket()
 			if (!fis.data[i]) continue;
 			POSTO[i][4] = fis.data[i][2];
 			var vel = fis.data[i][3];
-			POSTO[i][2] = vel;
+			POSTO[i][2] = POSTO[i][2]*0.9 + vel*0.1;
+			var myTimeAhead = timeAhead + 0.5*Math.abs(POSTO[i][2]);
 			var dir = fis.data[i][4];
 			POSTO[i][3] = dir;
 			FISH[i][5] = fis.data[i][5];
 			FISH[i][6] = fis.data[i][6];
 			FISH[i][7] = fis.data[i][7];
-			FISH[i][9] = fis.data[i][9];
 			FISH[i][10] = fis.data[i][10];
+			
+			var nextHp = fis.data[i][9];
+			if (nextHp<FISH[i][9])
+			{
+				vol = 50000 / (150000 + dis(FISH[i][0]-FISH[PLAYERID][0],FISH[i][1]-FISH[PLAYERID][1]));
+				//console.log(vol);
+				if (vol>0.1)
+				{
+					biteSnd.volume = vol;
+					biteSnd.play();
+				}
+			}
+			FISH[i][9] = nextHp;
+			
 			FISH[i][11] = fis.data[i][11];
 			
-			POSTO[i][0] = fis.data[i][0]+Math.cos(dir)*timeAhead*vel;
-			POSTO[i][1] = fis.data[i][1]+Math.sin(dir)*timeAhead*vel;
+			POSTO[i][0] = fis.data[i][0]+Math.cos(dir)*myTimeAhead*vel;
+			POSTO[i][1] = fis.data[i][1]+Math.sin(dir)*myTimeAhead*vel;
 			
 			if (FISH[i][8] != fis.data[i][8]) // new fish in - different name
 			{				
@@ -1814,13 +1825,14 @@ function startSocket()
 			if (!sha.data[i]) continue;
 			SHARK[i][2] = sha.data[i][2];
 			var vel = sha.data[i][3];
+			var myTimeAhead = timeAhead + 3*Math.abs(vel);
 			SHARKTO[i][2] = vel;
 			var dir = sha.data[i][4];
 			SHARKTO[i][3] = dir;
 			SHARKTO[i][4] = sha.data[i][5];
 			
-			SHARKTO[i][0] = sha.data[i][0]+Math.cos(dir)*timeAhead*vel;
-			SHARKTO[i][1] = sha.data[i][1]+Math.sin(dir)*timeAhead*vel;
+			SHARKTO[i][0] = sha.data[i][0]+Math.cos(dir)*myTimeAhead*vel;
+			SHARKTO[i][1] = sha.data[i][1]+Math.sin(dir)*myTimeAhead*vel;
 		}
 		
 		boatVX = boa.vx;
@@ -1834,6 +1846,8 @@ function startSocket()
 		hookXTo = boa.hx+hookVX*timeAhead;
 		hookYTo = boa.hy+hookVY*timeAhead;
 		veinLen = boa.vl;
+		
+		huntId = hun;
 	});
 }
 		</script>
