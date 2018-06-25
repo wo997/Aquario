@@ -1526,16 +1526,19 @@ function input()
 	if (getSmaller<0.99) return;
 	var mousePosition = renderer.plugins.interaction.mouse.global;
 	
-	if (vertical)
+	if (!isMobile)
 	{
-		var off = (WIDTH-HEIGHT)/2;
-		MOUSEY = WIDTH-mousePosition.x-off;
-		MOUSEX = mousePosition.y+off;
-	}
-	else
-	{	
-		MOUSEX = mousePosition.x;
-		MOUSEY = mousePosition.y;
+		if (vertical)
+		{
+			var off = (WIDTH-HEIGHT)/2;
+			MOUSEY = WIDTH-mousePosition.x-off;
+			MOUSEX = mousePosition.y+off;
+		}
+		else
+		{	
+			MOUSEX = mousePosition.x;
+			MOUSEY = mousePosition.y;
+		}
 	}
 }
 
