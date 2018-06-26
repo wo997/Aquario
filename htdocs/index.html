@@ -501,7 +501,6 @@ function resize() {
 	document.body.style['-webkit-transform'] = 'scale(' + scale + ')';
 	
 	window.scrollTo(-2*(1-scale)*prevWidth, 2*(1-scale)*prevHeight);*/
-	window.scrollTo(0,0);
 	
 	stage.scale.x = stage.scale.y = 1/SCALE;
 	
@@ -776,6 +775,8 @@ var lastUpdate = 0;
 function update(time)
 {
 	TIME = time/15;
+	
+	window.scrollTo(0,0);
 	
     if (lastTime) {
         deltaTime = deltaTime*0.5+(time - lastTime)/33.4;
@@ -1617,9 +1618,18 @@ function moveMouseTo(px,py,click)
 {
 	if (vertical)
 	{
-		var off = (WIDTH-HEIGHT)/2;
-		MOUSEY = WIDTH-px-off;
-		MOUSEX = py+off;
+		if (isMobile)
+		{
+			var off = (WIDTH-HEIGHT)/2;
+			MOUSEY = WIDTH-px+off;
+			MOUSEX = py+off;
+		}
+		else
+		{
+			var off = (WIDTH-HEIGHT)/2;
+			MOUSEY = WIDTH-px-off;
+			MOUSEX = py+off;
+		}
 	}
 	else
 	{	
