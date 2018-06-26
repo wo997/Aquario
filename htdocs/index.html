@@ -1606,9 +1606,8 @@ function moveMouseTo(px,py,click)
 {
 	if (vertical)
 	{
-		var off = (WIDTH-HEIGHT)/2;
-		MOUSEY = WIDTH-px-off;
-		MOUSEX = py+off;
+		MOUSEY = WIDTH-px;
+		MOUSEX = py;
 	}
 	else
 	{	
