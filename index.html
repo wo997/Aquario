@@ -211,7 +211,6 @@ function setAlpha(op)
 		-moz-box-shadow: 0 3px 5px rgba(0,0,0,0.5);
 	}
 	input{
-		padding-top: 3px;
 		border-radius: 20px 0 0 20px;
 		text-indent: 15px;
 		font-family: lucida console;
@@ -219,13 +218,16 @@ function setAlpha(op)
 	}
 	#playBtn{
 		background-color: #59f;
-		font-size: 24px;
+		font-size: 20px;
 		border-radius: 0 20px 20px 0;
-		margin-left: -4px;
-		width: 70px;
+		margin-left: -6px;
+		width: 60px;
 		font-family: "Baloo";
 		color: white;
 		transition: all 0.15s;
+		display: inline-block;
+		height: 40px;
+		padding-top: 3px;
 	}
 	#playBtn:hover{
 		background-color: #6Bf;
@@ -441,7 +443,7 @@ function resize() {
 	}
 	
 	var minHeight = 400;
-	var minWidth = 600;
+	var minWidth = 500;
 	var maxHeight = 1000;
 	var maxWidth = 1600;
 
@@ -1606,7 +1608,7 @@ function moveMouseTo(px,py,click)
 {
 	if (vertical)
 	{
-		var off = (WIDTH-HEIGHT)/2;
+		var off = WIDTH-HEIGHT;
 		MOUSEY = WIDTH-px-off;
 		MOUSEX = py+off;
 	}
