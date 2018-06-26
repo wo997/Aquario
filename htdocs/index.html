@@ -215,6 +215,7 @@ function setAlpha(op)
 		text-indent: 15px;
 		font-family: lucida console;
 		height: 35px;
+		float: left;
 	}
 	#playBtn{
 		background-color: #59f;
@@ -228,6 +229,7 @@ function setAlpha(op)
 		display: inline-block;
 		height: 40px;
 		padding-top: 3px;
+		float: left;
 	}
 	#playBtn:hover{
 		background-color: #6Bf;
@@ -275,6 +277,7 @@ function setAlpha(op)
 					<div>
 						<input type=text id=nickname maxlength=18 placeholder="Your name..."/>
 						<button class="textShadow" id=playBtn onclick="startSocket();">Play</button>
+						<div style="clear:both"></div>
 					</div>
 					<div id="conn" style="margin-top:5px; visibility: hidden">Connecting...</div>
 					<div id="customize" style="margin-top: 220px; width: 320px;">
@@ -443,7 +446,7 @@ function resize() {
 	}
 	
 	var minHeight = 400;
-	var minWidth = 600;
+	var minWidth = 500;
 	var maxHeight = 1000;
 	var maxWidth = 1600;
 
@@ -482,7 +485,7 @@ function resize() {
 		ele.style.left = Math.round(WIDTH/2-173)+conq.left+"px";
 	}
 	
-	ele.style.top = Math.round(HEIGHT/2-350)+"px";
+	ele.style.top = Math.round(HEIGHT/2-340)+"px";
 	
 	skywater.width = WIDTH;
 	
