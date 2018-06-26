@@ -226,7 +226,6 @@ function setAlpha(op)
 		font-family: "Baloo";
 		color: white;
 		transition: all 0.15s;
-		display: inline-block;
 		height: 40px;
 		padding-top: 3px;
 		float: left;
@@ -274,7 +273,7 @@ function setAlpha(op)
 						<font id = "f7">o</font>
 					</div>
 					<br><br>
-					<div>
+					<div style="width: 298px;">
 						<input type=text id=nickname maxlength=18 placeholder="Your name..."/>
 						<button class="textShadow" id=playBtn onclick="startSocket();">Play</button>
 						<div style="clear:both"></div>
@@ -412,6 +411,7 @@ function RELOAD()
 {
 	alert("You've been kicked, you were inactive or the connection was broken.");
 	location.reload();
+	fadeinMenu();
 	setTimeout(null,100000);
 }
 
@@ -428,7 +428,7 @@ function resize() {
     WIDTH = window.innerWidth;
     HEIGHT = window.innerHeight;
 	
-	vertical = (WIDTH<HEIGHT && isMobile);
+	vertical = (WIDTH<HEIGHT);// && isMobile);
 	if (vertical)
 	{
 		var temp = HEIGHT;
@@ -485,7 +485,7 @@ function resize() {
 		ele.style.left = Math.round(WIDTH/2-173)+conq.left+"px";
 	}
 	
-	ele.style.top = Math.round(HEIGHT/2-340)+"px";
+	ele.style.top = Math.round(HEIGHT/2-310)+"px";
 	
 	skywater.width = WIDTH;
 	
@@ -513,8 +513,8 @@ function resize() {
 	
 	skywater.width = WIDTH*SCALE;
 	
-	customize.marginTop = (Math.floor(150/SCALE)+70)+"px";
-	title.marginBottom = (Math.floor(70/SCALE)-70)+"px";
+	customize.marginTop = (Math.floor(150/SCALE)+50)+"px";
+	title.marginBottom = (Math.floor(60/SCALE)-80)+"px";
 }
 
 var isMobile = false;
@@ -531,6 +531,12 @@ function init() {
 			}
 		}, false);
 		document.body.addEventListener('touchmove', function(event) {
+			if (event.touches.length>0)
+			{
+				moveMouseTo(event.touches[0].pageX,event.touches[0].pageY,false);
+			}
+		}, false);
+		document.body.addEventListener('touchend', function(event) {
 			if (event.touches.length>0)
 			{
 				moveMouseTo(event.touches[0].pageX,event.touches[0].pageY,false);
@@ -1611,9 +1617,9 @@ function moveMouseTo(px,py,click)
 {
 	if (vertical)
 	{
-		var off = WIDTH-HEIGHT;
+		var off = (WIDTH-HEIGHT)/2;
 		MOUSEY = WIDTH-px-off;
-		MOUSEX = py+off;
+		MOUSEX = py+off+(isMobile?WIDTH/2:0);
 	}
 	else
 	{	
