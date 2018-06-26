@@ -1620,9 +1620,8 @@ function moveMouseTo(px,py,click)
 	{
 		if (isMobile)
 		{
-			var off = (WIDTH-HEIGHT)/2;
-			MOUSEY = window.innerWidth-px-off;
-			MOUSEX = py+off;
+			MOUSEY = window.innerWidth-px;
+			MOUSEX = py;
 		}
 		else
 		{
