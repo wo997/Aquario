@@ -275,7 +275,7 @@ function setAlpha(op)
 					</div>
 					<br><br>
 					<div style="width: 298px;">
-						<input type=text id=nickname maxlength=18 placeholder="Your name..."/>
+						<input type=text id=nickname maxlength="18" placeholder="Your name..."/>
 						<button class="textShadow" id=playBtn onclick="startSocket();">Play</button>
 						<div style="clear:both"></div>
 					</div>
@@ -1560,7 +1560,7 @@ function renderGreenShit()
 {
 	//C.beginFill(0x118833);
 	
-	for (x=0;x<WIDTH/BOTTOMSIZE+2;x++)
+	for (x=-Math.ceil(LX/BOTTOMSIZE);x<WIDTH*SCALE/BOTTOMSIZE+2;x++)
 	{
 		var which = x+Math.floor(SCROLLX/BOTTOMSIZE);
 		var type = (2*which+which%11-which%5)%16;
