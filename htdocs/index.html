@@ -489,11 +489,11 @@ function resize() {
 	
 	skywater.width = WIDTH;
 	
-	diedText.x = LX + WIDTH*SCALE/2;
-	diedText.y = LY + HEIGHT*SCALE/2-150;
+	diedText.x = WIDTH*SCALE/2;
+	diedText.y = HEIGHT*SCALE/2-150;
 	
-	highScoreText.x = LX + WIDTH*SCALE/2;
-	highScoreText.y = LY + HEIGHT*SCALE/2+150;
+	highScoreText.x = WIDTH*SCALE/2;
+	highScoreText.y = HEIGHT*SCALE/2+150;
 	
 	/*var scale = 0.5;
 	document.body.style.transform = 'scale(' + scale + ')';
@@ -514,7 +514,7 @@ function resize() {
 	skywater.width = WIDTH*SCALE;
 	
 	customize.marginTop = (Math.floor(150/SCALE)+50)+"px";
-	title.marginBottom = (Math.floor(60/SCALE)-80)+"px";
+	title.marginBottom = (Math.floor(60/SCALE)-85)+"px";
 }
 
 var isMobile = false;
@@ -1619,7 +1619,7 @@ function moveMouseTo(px,py,click)
 	{
 		var off = (WIDTH-HEIGHT)/2;
 		MOUSEY = WIDTH-px-off;
-		MOUSEX = py+off+(isMobile?WIDTH/2:0);
+		MOUSEX = py+off;
 	}
 	else
 	{	
