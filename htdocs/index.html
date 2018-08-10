@@ -474,7 +474,7 @@ function resize() {
 	scoreText.x = WIDTH*SCALE-120;
 	
 	chatText.x = chatMeText.x = 0.07*WIDTH;
-	chatText.y = chatMeText.y = HEIGHT*WIDTH-100;
+	chatText.y = chatMeText.y = HEIGHT-100;
 	
 	var conq = canvas.getBoundingClientRect();
 	
@@ -1884,7 +1884,6 @@ function startSocket()
 			POSTO[i][2] = POSTO[i][2]*0.9 + vel*0.1;
 			var myTimeAhead = timeAhead + 1.3*Math.abs(POSTO[i][2]);
 			var dir = fis.data[i][4];
-			POSTO[i][3] = dir;
 			FISH[i][5] = fis.data[i][5];
 			FISH[i][6] = fis.data[i][6];
 			FISH[i][7] = fis.data[i][7];
@@ -1907,6 +1906,12 @@ function startSocket()
 			
 			POSTO[i][0] = fis.data[i][0]+Math.cos(dir)*myTimeAhead*vel;
 			POSTO[i][1] = fis.data[i][1]+Math.sin(dir)*myTimeAhead*vel;
+			
+			var turn = (mod(FISH[i][6]-dir,2*Math.PI)-Math.PI)*2.61/vel;
+			if (turn>1) turn = 1;
+			if (turn<-1) turn = -1;
+			
+			POSTO[i][3] = dir + 0.7*timeAhead*turn/(10+2*SIZE);
 			
 			if (FISH[i][8] != fis.data[i][8]) // new fish in - different name
 			{				
