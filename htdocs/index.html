@@ -156,10 +156,6 @@ function setAlpha(op)
 }
 </script>
 	<style>
-	html {
-		transform-origin: top left;
-		transform: scale(1.5);
-	}
 	body{
 		transform-origin: bottom left;
 		height:100vw;
@@ -431,8 +427,8 @@ function resize() {
 	}
 	console.log(body.scrollHeight+" "+body.offsetHeight+" "+window.innerHeight);
 	*/
-    WIDTH = window.innerWidth / 1.5;
-    HEIGHT = window.innerHeight / 1.5;
+    WIDTH = window.innerWidth;
+    HEIGHT = window.innerHeight;
 	
 	vertical = (WIDTH<HEIGHT && isMobile);
 	if (vertical)
