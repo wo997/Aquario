@@ -7,154 +7,157 @@
 	<link rel="shortcut icon" href="htdocs/icon.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<script>
-	
-var was = false;
-function setF(){
-	if (gameStarted)
-	{
-		FX = FISH[PLAYERID][0];
-		FY = FISH[PLAYERID][1];
-		DIR = FISH[PLAYERID][4];
-		SIN = Math.sin(DIR);
-		COS = Math.cos(DIR);
-		VEL = FISH[PLAYERID][3];
-	}
-	else
-	{
-		FX = SCROLLX + WIDTH/2 - 10;
-		FY = SCROLLY + HEIGHT/2+65;
-		SIN = 0;
-		COS = -1;
-		VEL = 0.5;
-	}
-	SIZE = 0.7+3.5*OP;
-	type = MYTYPE;
-	
-	wasR = COLOR.r;
-	wasG = COLOR.g;
-	wasB = COLOR.b;
-	COLOR.r = 0;
-	COLOR.g = 57;
-	COLOR.b = 100;
-	FX += 2;
-	FY += 5;
-	renderFish(true);
-	COLOR.r = wasR;
-	COLOR.g = wasG;
-	COLOR.b = wasB;
-	FX -= 2;
-	FY -= 5;
-	renderFish(true);
-	
-	var hai = ele.style.paddingTop;
-	var top = +hai.substr(0,hai.length-2)+HEIGHT/2;
-	if (dis(MOUSEX+137/SCALE-WIDTH/2,MOUSEY-70/SCALE-HEIGHT/2)<2500)
-	{
-		C.lineStyle(2,0x999999,OP);
-		C.beginFill(0xFFFFFF,OP);
-		
-		if (LMB && !was)
-		{
-			MYTYPE = MYTYPE%3+1;
-			bubbleSnd.play();
-		}
-	}
-	else
-	{
-		C.lineStyle(2,0x777777,OP);
-		C.beginFill(0xDDDDDD,OP);
-	}
-	moveTo2(-130+WIDTH/2,top);
-	lineTo2(-150+WIDTH/2,30+top);
-	lineTo2(-130+WIDTH/2,60+top);
-	C.closePath();
-	C.endFill();
-	
-	if (dis(MOUSEX-137/SCALE-WIDTH/2,MOUSEY-70/SCALE-HEIGHT/2)<2500)
-	{
-		C.lineStyle(2,0x999999,OP);
-		C.beginFill(0xFFFFFF,OP);
-		
-		if (LMB && !was)
-		{
-			MYTYPE = (MYTYPE+1)%3+1;
-			bubbleSnd.play();
-		}
-	}
-	else
-	{
-		C.lineStyle(2,0x777777,OP);
-		C.beginFill(0xDDDDDD,OP);
-	}
-	moveTo2(130+WIDTH/2,top);
-	lineTo2(150+WIDTH/2,30+top);
-	lineTo2(130+WIDTH/2,60+top);
-	C.closePath();
-	C.endFill();
-	
-	was = LMB;
-};
-var anim = {p: 0, f: 0,d: new Function()};
-function fadeInMenu(){
-	anim.d = function(){
-		if (anim.p == 1)
-		{		
-			gameStarted = false;
-			justStarted = false;
-			getSmaller = 1;
-			document.getElementById("lol").style.display = "block";
-			document.getElementById('conn').style.visibility = 'hidden';
-			highScoreText.text = 'Your highest score: ' + highScore;
-			canPlay = true;
-		}
-		if(anim.p <= 30){
-			var much = 40 - Math.cos(anim.p * Math.PI / 60) * 40;
-			ele.style.paddingTop = much;
-			highScoreText.y = HEIGHT/2+115 + much + LY;
-			setAlpha(Math.sin(anim.p * Math.PI / 60));
-		}else{
-			clearInterval(anim.f);
-			anim.p = 0;
+		document.addEventListener('touchmove', function(e) {
+			e.preventDefault();
+		}, false);
+			
+		var was = false;
+		function setF(){
+			if (gameStarted)
+			{
+				FX = FISH[PLAYERID][0];
+				FY = FISH[PLAYERID][1];
+				DIR = FISH[PLAYERID][4];
+				SIN = Math.sin(DIR);
+				COS = Math.cos(DIR);
+				VEL = FISH[PLAYERID][3];
+			}
+			else
+			{
+				FX = SCROLLX + WIDTH/2 - 10;
+				FY = SCROLLY + HEIGHT/2+65;
+				SIN = 0;
+				COS = -1;
+				VEL = 0.5;
+			}
+			SIZE = 0.7+3.5*OP;
+			type = MYTYPE;
+			
+			wasR = COLOR.r;
+			wasG = COLOR.g;
+			wasB = COLOR.b;
+			COLOR.r = 0;
+			COLOR.g = 57;
+			COLOR.b = 100;
+			FX += 2;
+			FY += 5;
+			renderFish(true);
+			COLOR.r = wasR;
+			COLOR.g = wasG;
+			COLOR.b = wasB;
+			FX -= 2;
+			FY -= 5;
+			renderFish(true);
+			
+			var hai = ele.style.paddingTop;
+			var top = +hai.substr(0,hai.length-2)+HEIGHT/2;
+			if (dis(MOUSEX+137/SCALE-WIDTH/2,MOUSEY-70/SCALE-HEIGHT/2)<2500)
+			{
+				C.lineStyle(2,0x999999,OP);
+				C.beginFill(0xFFFFFF,OP);
+				
+				if (LMB && !was)
+				{
+					MYTYPE = MYTYPE%3+1;
+					bubbleSnd.play();
+				}
+			}
+			else
+			{
+				C.lineStyle(2,0x777777,OP);
+				C.beginFill(0xDDDDDD,OP);
+			}
+			moveTo2(-130+WIDTH/2,top);
+			lineTo2(-150+WIDTH/2,30+top);
+			lineTo2(-130+WIDTH/2,60+top);
+			C.closePath();
+			C.endFill();
+			
+			if (dis(MOUSEX-137/SCALE-WIDTH/2,MOUSEY-70/SCALE-HEIGHT/2)<2500)
+			{
+				C.lineStyle(2,0x999999,OP);
+				C.beginFill(0xFFFFFF,OP);
+				
+				if (LMB && !was)
+				{
+					MYTYPE = (MYTYPE+1)%3+1;
+					bubbleSnd.play();
+				}
+			}
+			else
+			{
+				C.lineStyle(2,0x777777,OP);
+				C.beginFill(0xDDDDDD,OP);
+			}
+			moveTo2(130+WIDTH/2,top);
+			lineTo2(150+WIDTH/2,30+top);
+			lineTo2(130+WIDTH/2,60+top);
+			C.closePath();
+			C.endFill();
+			
+			was = LMB;
 		};
-		anim.p++;
-	};
-	anim.f = setInterval(anim.d,16.7);
-	document.getElementById('playBtn').innerText = "Play";
-};
-function fadeOutMenu(){
-	anim.d = function(){
-		if(anim.p <= 30){
-			var much = Math.cos(anim.p * Math.PI / 60) * 40;
-			ele.style.paddingTop = much;
-			highScoreText.y = HEIGHT/2+115 + much + LY
-			setAlpha(1 - Math.sin(anim.p * Math.PI / 60));
-		} else {
-			document.getElementById("lol").style.display = "none";
-			clearInterval(anim.f);
-			anim.p = 0;
+		var anim = {p: 0, f: 0,d: new Function()};
+		function fadeInMenu(){
+			anim.d = function(){
+				if (anim.p == 1)
+				{		
+					gameStarted = false;
+					justStarted = false;
+					getSmaller = 1;
+					document.getElementById("lol").style.display = "block";
+					document.getElementById('conn').style.visibility = 'hidden';
+					highScoreText.text = 'Your highest score: ' + highScore;
+					canPlay = true;
+				}
+				if(anim.p <= 30){
+					var much = 40 - Math.cos(anim.p * Math.PI / 60) * 40;
+					ele.style.paddingTop = much;
+					highScoreText.y = HEIGHT/2+115 + much + LY;
+					setAlpha(Math.sin(anim.p * Math.PI / 60));
+				}else{
+					clearInterval(anim.f);
+					anim.p = 0;
+				};
+				anim.p++;
+			};
+			anim.f = setInterval(anim.d,16.7);
+			document.getElementById('playBtn').innerText = "Play";
 		};
-		anim.p++;
-	};
-	anim.f = setInterval(anim.d,16.7);
-};
-var OP = 1;
-function setAlpha(op)
-{
-	OP = op;
-	ele.style.opacity = op;
-	scoreText.alpha = 1-op;
-	scoreMeText.alpha = 1-op;
-	hpText.alpha = 1-op;
-	o2Text.alpha = 1-op;
-	highScoreText.alpha = op;
-	chatText.alpha = (1-op) * (CHATACTIVE?0.75:0.25);
-	chatMeText.alpha = (1-op) * (CHATACTIVE?0.75:0.25);
-	if (diedText.alpha>0) diedText.alpha -= 0.05;
-	for (i=0;i<FISH.length;i++) {
-		displayNames[i].alpha = 1-op;
-	}
-}
-</script>
+		function fadeOutMenu(){
+			anim.d = function(){
+				if(anim.p <= 30){
+					var much = Math.cos(anim.p * Math.PI / 60) * 40;
+					ele.style.paddingTop = much;
+					highScoreText.y = HEIGHT/2+115 + much + LY
+					setAlpha(1 - Math.sin(anim.p * Math.PI / 60));
+				} else {
+					document.getElementById("lol").style.display = "none";
+					clearInterval(anim.f);
+					anim.p = 0;
+				};
+				anim.p++;
+			};
+			anim.f = setInterval(anim.d,16.7);
+		};
+		var OP = 1;
+		function setAlpha(op)
+		{
+			OP = op;
+			ele.style.opacity = op;
+			scoreText.alpha = 1-op;
+			scoreMeText.alpha = 1-op;
+			hpText.alpha = 1-op;
+			o2Text.alpha = 1-op;
+			highScoreText.alpha = op;
+			chatText.alpha = (1-op) * (CHATACTIVE?0.75:0.25);
+			chatMeText.alpha = (1-op) * (CHATACTIVE?0.75:0.25);
+			if (diedText.alpha>0) diedText.alpha -= 0.05;
+			for (i=0;i<FISH.length;i++) {
+				displayNames[i].alpha = 1-op;
+			}
+		}
+	</script>
 	<style>
 	body{
 		transform-origin: bottom left;
