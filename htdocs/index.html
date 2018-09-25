@@ -1371,6 +1371,7 @@ function face()
 	
 	if (isMobile)
 	{
+		alert(windowWidth);
 		
 		C.beginFill(0x000000,0.2);
 		C.arc(80,windowHeight-80,70,0,2*Math.PI);
@@ -1379,10 +1380,10 @@ function face()
 		
 		C.beginFill(0xFFFFFF,0);
 		C.lineStyle(5+2*LMB,0xFFFFFF,0.4+0.2*LMB);
-		C.moveTo(2*windowWidth-120,2*windowHeight-80);
-		C.lineTo(2*windowWidth-40,2*windowHeight-80);
-		C.moveTo(2*windowWidth-80,2*windowHeight-120);
-		C.lineTo(2*windowWidth-80,2*windowHeight-40);
+		C.moveTo(windowWidth-120,windowHeight-80);
+		C.lineTo(windowWidth-40,windowHeight-80);
+		C.moveTo(windowWidth-80,windowHeight-120);
+		C.lineTo(windowWidth-80,windowHeight-40);
 		C.endFill();
 		
 		C.beginFill(0xFFFFFF,0);
