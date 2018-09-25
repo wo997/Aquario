@@ -568,12 +568,7 @@ function controlMobile(event,down)
 {
 	if (down == false) 
 	{
-		for (i=0;i<event.touches.length;i++)
-		{
-			var mx = event.touches[i].pageX;
-			var my = event.touches[i].pageY;
-			console.log(mx+" : "+my);
-		}
+		alert("hmm"+event.touches.length);
 	}
 	for (i=0;i<event.touches.length;i++)
 	{
@@ -594,7 +589,7 @@ function init() {
 		isMobile = true;
 		document.body.addEventListener('touchstart', function(event) {controlMobile(event,true);}, false);
 		document.body.addEventListener('touchmove', function(event) {controlMobile(event,true);}, false);
-		document.body.addEventListener('touchend', function(event) {controlMobile(event,false);}, false);
+		document.body.addEventListener('touchend', function(event) {alert("kurwa");controlMobile(event,false);}, false);
 	}
 	container = document.getElementById("container").style;
 	customize = document.getElementById("customize").style;
