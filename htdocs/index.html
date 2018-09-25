@@ -317,7 +317,10 @@
   </head>
 	<body onload="init();" onresize='resize();'>
 		<div id="container" align=center>
-			<canvas id="game-canvas" width="1000" height="600"></canvas>
+			<div style="width: 100vw">
+				<canvas id="game-canvas" width="1000" height="600"></canvas>
+				<canvas id="canvasoverlay" width="1000" height="600" style="margin-left: 0; margin-top: -100%; position: relative; top: -20px;"></canvas>
+			</div>
 			<div id=lol style="padding-top: 40px;background-color:transparent;position:absolute;opacity:1">
 				<div id=menu style="padding: 20px; width: 320px; margin-top: 20%;">
 					<div id="title" class="textShadow">
@@ -460,7 +463,7 @@ var skywater;
 
 //var points = []; of fish mesh rope
 
-var canvas,contextText;
+var canvas,canvasoverlay,contextText;
 
 var bubbleSnd;
 
@@ -526,6 +529,9 @@ function resize() {
 	
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
+	
+	canvasoverlay.width = WIDTH;
+	canvasoverlay.height = HEIGHT;
 	
 	this.renderer.resize(WIDTH, HEIGHT);
 	
@@ -609,6 +615,7 @@ function init() {
 	title = document.getElementById("title").style;
 	
 	canvas = document.getElementById("game-canvas");
+	canvasoverlay = document.getElementById("canvasoverlay");
 	contextText = document.getElementById("canvasText").getContext('2d');
 	
 	renderer = PIXI.autoDetectRenderer(WIDTH,HEIGHT,{view:canvas,antialias:true});
@@ -1132,6 +1139,11 @@ function update(time)
 	}
 	
 	renderer.render(stage);
+	
+	
+	canvasoverlay.getContext('2d').drawImage(canvas, 0, 0);
+
+	
 	
     requestAnimationFrame(update);
 
