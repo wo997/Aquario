@@ -570,7 +570,7 @@ function controlMobile(event,down)
 	{
 		var mx = event.touches[i].pageX;
 		var my = event.touches[i].pageY;
-		if (mx < WIDTH / 2) moveMouseTo(mx,my,false);
+		if (mx < windowWidth / 2) moveMouseTo(mx,my,false);
 		else LMB = down;
 	}
 }
@@ -1697,7 +1697,7 @@ function moveMouseTo(px,py,click)
 	{
 		if (isMobile)
 		{
-			MOUSEY = window.innerWidth-px;
+			MOUSEY = windowWidth-px;
 			MOUSEX = py;
 		}
 		else
@@ -1712,7 +1712,6 @@ function moveMouseTo(px,py,click)
 		MOUSEX = px;
 		MOUSEY = py;
 	}
-	if (click && !gameStarted) LMB = true;
 	
 	if (isMobile)
 	{	
@@ -1726,6 +1725,7 @@ function moveMouseTo(px,py,click)
 			MOUSEY += vy*(70-len)/len;
 		}
 	}
+	else if (click && !gameStarted) LMB = true;
 }
 
 function mouseDown(e)
