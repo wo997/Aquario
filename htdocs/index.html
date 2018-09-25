@@ -566,13 +566,21 @@ function resize() {
 
 function controlMobile(event,down)
 {
+	if (down == false) 
+	{
+		for (i=0;i<event.touches.length;i++)
+		{
+			var mx = event.touches[i].pageX;
+			var my = event.touches[i].pageY;
+			console.log(mx+" : "+my);
+		}
+	}
 	for (i=0;i<event.touches.length;i++)
 	{
 		var mx = event.touches[i].pageX;
 		var my = event.touches[i].pageY;
 		if (my < windowWidth / 2) moveMouseTo(mx,my,false);
 		else LMB = down;
-		alert(down);
 	}
 }
 
@@ -1688,7 +1696,7 @@ function input()
 	
 	if (!isMobile)
 	{
-		moveMouseTo(mousePosition.x+20,mousePosition.y+20);
+		moveMouseTo(mousePosition.x+40,mousePosition.y-40);
 	}
 }
 
