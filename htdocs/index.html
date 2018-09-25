@@ -572,6 +572,7 @@ function controlMobile(event,down)
 		var my = event.touches[i].pageY;
 		if (mx < windowWidth / 2) moveMouseTo(mx,my,false);
 		else LMB = down;
+		alert(mx + " " + windowWidth / 2);
 	}
 }
 
@@ -1697,7 +1698,7 @@ function moveMouseTo(px,py,click)
 	{
 		if (isMobile)
 		{
-			MOUSEY = windowHeight-px;
+			MOUSEY = HEIGHT-px;
 			MOUSEX = py;
 		}
 		else
