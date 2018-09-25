@@ -568,14 +568,13 @@ function controlMobile(event,down)
 {
 	if (down == false) 
 	{
-		alert("hmm"+event.touches.length);
+		LMB = false;
 	}
 	for (i=0;i<event.touches.length;i++)
 	{
 		var mx = event.touches[i].pageX;
 		var my = event.touches[i].pageY;
-		if (my < windowWidth / 2) moveMouseTo(mx,my,false);
-		else LMB = down;
+		if (my < windowWidth / 2) moveMouseTo(mx+25,my-25,false);
 	}
 }
 
@@ -589,7 +588,7 @@ function init() {
 		isMobile = true;
 		document.body.addEventListener('touchstart', function(event) {controlMobile(event,true);}, false);
 		document.body.addEventListener('touchmove', function(event) {controlMobile(event,true);}, false);
-		document.body.addEventListener('touchend', function(event) {alert("kurwa");controlMobile(event,false);}, false);
+		document.body.addEventListener('touchend', function(event) {controlMobile(event,false);}, false);
 	}
 	container = document.getElementById("container").style;
 	customize = document.getElementById("customize").style;
@@ -1691,7 +1690,7 @@ function input()
 	
 	if (!isMobile)
 	{
-		moveMouseTo(mousePosition.x+40,mousePosition.y-40);
+		moveMouseTo(mousePosition.x,mousePosition.y);
 	}
 }
 
