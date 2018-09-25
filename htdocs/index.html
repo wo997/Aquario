@@ -473,8 +473,6 @@ function resize() {
 	*/
     WIDTH = window.innerWidth;
     HEIGHT = window.innerHeight;
-	windowWidth = WIDTH;
-	windowHeight = HEIGHT;
 	
 	vertical = (WIDTH<HEIGHT && isMobile);
 	if (vertical)
@@ -492,6 +490,9 @@ function resize() {
 		document.body.style.transform = "rotate(0deg)";
 		document.body.style.top = "0";
 	}
+	
+	windowWidth = WIDTH;
+	windowHeight = HEIGHT;
 	
 	var minHeight = 400;
 	var minWidth = 500;
@@ -1600,7 +1601,7 @@ function control()
 	if (isMobile)
 	{
 		SCROLLX = SCROLLX * SOFT + (2 * (MOUSEX-80) - 0.5 * WIDTH + x) * (1-SOFT);
-		SCROLLY = SCROLLY * SOFT + (2 * (MOUSEY-HEIGHT+80) - 0.5 * HEIGHT + y) * (1-SOFT);
+		SCROLLY = SCROLLY * SOFT + (2 * (MOUSEY-windowHeight+80) - 0.5 * HEIGHT + y) * (1-SOFT);
 	}
 	else
 	{
