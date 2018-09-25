@@ -7,10 +7,18 @@
 	<link rel="shortcut icon" href="htdocs/icon.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<script>
-		document.addEventListener('touchmove', function(e) {
-			e.preventDefault();
-		}, false);
-			
+		function openFullscreen() {
+		  if (document.body.requestFullscreen) {
+			document.body.requestFullscreen();
+		  } else if (document.body.mozRequestFullScreen) { /* Firefox */
+			document.body.mozRequestFullScreen();
+		  } else if (document.body.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+			document.body.webkitRequestFullscreen();
+		  } else if (document.body.msRequestFullscreen) { /* IE/Edge */
+			document.body.msRequestFullscreen();
+		  }
+		}
+	
 		var was = false;
 		function setF(){
 			if (gameStarted)
@@ -1826,6 +1834,8 @@ function startSocket()
 	
 	bubbleSnd.play();
 
+	openFullscreen();
+	
 	window.socket = io();
 	
 	document.getElementById('conn').style.visibility = 'visible'
