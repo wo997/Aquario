@@ -787,7 +787,7 @@ function startGame()
 	
 	levelAlert = 0;
 		
-	MOUSEX = 80;
+	MOUSEX = 81;
 	MOUSEY = windowHeight-80;
 	
 	HPsmooth = 100;
@@ -1003,7 +1003,7 @@ function update(time)
 			{
 				var px = PLANKTON[a][0];
 				px += 5*Math.sin(px*0.01+TIME*0.05);
-				if (dis(px-mouthX,PLANKTON[a][1]-mouthY) < SIZE*SIZE*250+20)
+				if (dis(px-mouthX,PLANKTON[a][1]-mouthY) < SIZE*SIZE*250+90)
 				{
 					if (PLANKTON[a][2] == 0)
 						socket.emit("tasty");
