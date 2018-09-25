@@ -481,7 +481,6 @@ function resize() {
 		HEIGHT = WIDTH;
 		WIDTH = temp;
 		
-		
 		document.body.style.transform = "rotate(90deg)";
 		document.body.style.top = "-"+(HEIGHT)+"px";
 	}
@@ -494,8 +493,8 @@ function resize() {
 	windowWidth = WIDTH;
 	windowHeight = HEIGHT;
 	
-	var minHeight = 400;
-	var minWidth = 500;
+	var minHeight = 250;
+	var minWidth = 350;
 	var maxHeight = 1000;
 	var maxWidth = 1600;
 
@@ -1370,9 +1369,7 @@ function face()
 	}
 	
 	if (isMobile)
-	{
-		alert(windowWidth);
-		
+	{		
 		C.beginFill(0x000000,0.2);
 		C.arc(80,windowHeight-80,70,0,2*Math.PI);
 		C.drawRoundedRect(windowWidth-150,windowHeight-150,140,140,30);
