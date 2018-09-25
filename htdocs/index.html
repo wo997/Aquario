@@ -571,12 +571,7 @@ function controlMobile(event,down)
 		var mx = event.touches[i].pageX;
 		var my = event.touches[i].pageY;
 		if (my < windowWidth / 2) moveMouseTo(mx,my,false);
-		else
-		{
-			LMB = down;
-			if (!down) alert(down);
-		}
-		
+		else LMB = down;
 	}
 }
 
@@ -590,7 +585,7 @@ function init() {
 		isMobile = true;
 		document.body.addEventListener('touchstart', function(event) {controlMobile(event,true);}, false);
 		document.body.addEventListener('touchmove', function(event) {controlMobile(event,true);}, false);
-		document.body.addEventListener('touchend', function(event) {controlMobile(event,false);}, false);
+		document.body.addEventListener('touchend', function(event) {controlMobile(event,false); alert("kurwa")}, false);
 	}
 	container = document.getElementById("container").style;
 	customize = document.getElementById("customize").style;
@@ -1700,7 +1695,9 @@ function moveMouseTo(px,py,click)
 {
 	if (vertical)
 	{
-		if (isMobile)
+		MOUSEY = windowHeight-px;
+		MOUSEX = py;
+		/*if (isMobile)
 		{
 			MOUSEY = windowWidth-px;
 			MOUSEX = py;
@@ -1710,7 +1707,7 @@ function moveMouseTo(px,py,click)
 			var off = (WIDTH-HEIGHT)/2;
 			MOUSEY = WIDTH-px-off;
 			MOUSEX = py+off;
-		}
+		}*/
 	}
 	else
 	{	
