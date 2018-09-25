@@ -167,7 +167,19 @@
 		}
 	</script>
 	<style>
-	html{
+	html:-webkit-full-screen{
+		padding: 0;
+		margin: 0;
+	}
+	html:-moz-full-screen{
+		padding: 0;
+		margin: 0;
+	}
+	html:-ms-fullscreen{
+		padding: 0;
+		margin: 0;
+	}
+	html:fullscreen{
 		padding: 0;
 		margin: 0;
 	}
@@ -176,14 +188,28 @@
 		height:100vw;
 		width:100vh;
 		background-color: #4477bb;
-		padding: 0px;
-		margin: 0px;
+		padding: 0;
+		margin: 0;
 		position: relative;
 		-webkit-user-select: none;
 		-moz-user-select: none;
 		-ms-user-select: none;
 		user-select: none;
 		overflow: hidden;
+	}
+	body:-webkit-full-screen{
+		height: 100%;
+		width: 100%;
+	}
+	body:-moz-full-screen{
+		height: 100%;
+		width: 100%;
+	}
+	body:-ms-fullscreen{
+		height: 100%;
+		width: 100%;
+	}
+	body:fullscreen{
 		height: 100%;
 		width: 100%;
 	}
@@ -1840,7 +1866,7 @@ function startSocket()
 	
 	bubbleSnd.play();
 
-	openFullscreen();
+	if (isMobile) openFullscreen();
 	
 	window.socket = io();
 	
