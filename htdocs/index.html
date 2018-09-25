@@ -572,6 +572,7 @@ function controlMobile(event,down)
 		var my = event.touches[i].pageY;
 		if (my < windowWidth / 2) moveMouseTo(mx,my,false);
 		else LMB = down;
+		alert(down);
 	}
 }
 
@@ -585,7 +586,7 @@ function init() {
 		isMobile = true;
 		document.body.addEventListener('touchstart', function(event) {controlMobile(event,true);}, false);
 		document.body.addEventListener('touchmove', function(event) {controlMobile(event,true);}, false);
-		document.body.addEventListener('touchend', function(event) {controlMobile(event,false); alert("kurwa")}, false);
+		document.body.addEventListener('touchend', function(event) {controlMobile(event,false);}, false);
 	}
 	container = document.getElementById("container").style;
 	customize = document.getElementById("customize").style;
@@ -1687,7 +1688,7 @@ function input()
 	
 	if (!isMobile)
 	{
-		moveMouseTo(mousePosition.x,mousePosition.y);
+		moveMouseTo(mousePosition.x+20,mousePosition.y+20);
 	}
 }
 
