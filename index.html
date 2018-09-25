@@ -462,6 +462,8 @@ function RELOAD()
 var container, customize, title;
 var vertical = false;
 var SCALE = 1;
+var windowWidth = 0;
+var windowHeight = 0;
 function resize() {
 	// RESPONSIVE LAYOUT !!!!!!! SMALLER LEADERBOARD AND STUFF HP
 	/*if (body.scrollHeight > body.offsetHeight) {
@@ -488,6 +490,9 @@ function resize() {
 		document.body.style.transform = "rotate(0deg)";
 		document.body.style.top = "0";
 	}
+	
+	windowWidth = WIDTH;
+	windowHeight = HEIGHT;
 	
 	var minHeight = 400;
 	var minWidth = 500;
@@ -566,8 +571,7 @@ function controlMobile(event,down)
 	{
 		var mx = event.touches[i].pageX;
 		var my = event.touches[i].pageY;
-		if (mx < WIDTH / 2)
-			moveMouseTo(mx,my,false);
+		if (mx < WIDTH / 2) moveMouseTo(mx,my,false);
 		else LMB = down;
 	}
 }
@@ -1365,30 +1369,34 @@ function face()
 		scoreMeText.text = print2;
 	}
 	
-	C.beginFill(0x000000,0.2);
-	C.arc(80,HEIGHT-80,70,0,2*Math.PI);
-	C.drawRoundedRect(WIDTH-150,HEIGHT-150,140,140,30);
-	C.endFill();
-	
-	C.beginFill(0xFFFFFF,0);
-	C.lineStyle(5+2*LMB,0xFFFFFF,0.4+0.2*LMB);
-	C.moveTo(WIDTH-120,HEIGHT-80);
-	C.lineTo(WIDTH-40,HEIGHT-80);
-	C.moveTo(WIDTH-80,HEIGHT-120);
-	C.lineTo(WIDTH-80,HEIGHT-40);
-	C.endFill();
-	
-	C.beginFill(0xFFFFFF,0);
-	C.lineStyle(10,0xCCCCCC,0.5);
-	C.moveTo(80,HEIGHT-80);
-	C.lineTo(MOUSEX,MOUSEY);
-	C.endFill();
-	
-	C.beginFill(0xFFFFFF,1);
-	C.lineStyle(0,0xCCCCCC,0.7);
-	C.moveTo(MOUSEX-10,MOUSEY);
-	C.arc(MOUSEX,MOUSEY,10,0,2*Math.PI);
-	C.endFill();
+	if (isMobile)
+	{
+		
+		C.beginFill(0x000000,0.2);
+		C.arc(80,windowHeight-80,70,0,2*Math.PI);
+		C.drawRoundedRect(windowWidth-150,windowHeight-150,140,140,30);
+		C.endFill();
+		
+		C.beginFill(0xFFFFFF,0);
+		C.lineStyle(5+2*LMB,0xFFFFFF,0.4+0.2*LMB);
+		C.moveTo(2*windowWidth-120,2*windowHeight-80);
+		C.lineTo(2*windowWidth-40,2*windowHeight-80);
+		C.moveTo(2*windowWidth-80,2*windowHeight-120);
+		C.lineTo(2*windowWidth-80,2*windowHeight-40);
+		C.endFill();
+		
+		C.beginFill(0xFFFFFF,0);
+		C.lineStyle(10,0xCCCCCC,0.5);
+		C.moveTo(80,windowHeight-80);
+		C.lineTo(MOUSEX,MOUSEY);
+		C.endFill();
+		
+		C.beginFill(0xFFFFFF,1);
+		C.lineStyle(0,0xCCCCCC,0.7);
+		C.moveTo(MOUSEX-10,MOUSEY);
+		C.arc(MOUSEX,MOUSEY,10,0,2*Math.PI);
+		C.endFill();
+	}
 }
 
 var joyx = 0;
@@ -1593,7 +1601,7 @@ function control()
 	if (isMobile)
 	{
 		SCROLLX = SCROLLX * SOFT + (2 * (MOUSEX-80) - 0.5 * WIDTH + x) * (1-SOFT);
-		SCROLLY = SCROLLY * SOFT + (2 * (MOUSEY-HEIGHT+80) - 0.5 * HEIGHT + y) * (1-SOFT);
+		SCROLLY = SCROLLY * SOFT + (2 * (MOUSEY-windowHeight+80) - 0.5 * HEIGHT + y) * (1-SOFT);
 	}
 	else
 	{
@@ -1711,7 +1719,7 @@ function moveMouseTo(px,py,click)
 	if (isMobile)
 	{	
 		var vx = MOUSEX - 80;
-		var vy = MOUSEY - HEIGHT + 80;
+		var vy = MOUSEY - windowHeight + 80;
 		
 		var len = Math.sqrt(vx*vx+vy*vy);
 		if (len>70)
