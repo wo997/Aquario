@@ -19,7 +19,8 @@
 		  }
 		}
 		
-		function  exitFullscreen() {
+		function exitFullscreen() {
+			alert("kurwa");
 			if (document.body.exitFullscreen) {
 				document.body.exitFullscreen();
 			} else if (document.body.webkitExitFullscreen) {
@@ -131,6 +132,7 @@
 			anim.d = function(){
 				if (anim.p == 1)
 				{
+					if (isMobile) exitFullscreen();
 					gameStarted = false;
 					justStarted = false;
 					getSmaller = 1;
@@ -138,7 +140,6 @@
 					document.getElementById('conn').style.visibility = 'hidden';
 					highScoreText.text = 'Your highest score: ' + highScore;
 					canPlay = true;
-					if (isMobile) exitFullscreen();
 				}
 				if(anim.p <= 30){
 					var much = 40 - Math.cos(anim.p * Math.PI / 60) * 40;
@@ -1930,7 +1931,12 @@ function startSocket()
 	
 	bubbleSnd.play();
 
-	if (isMobile) openFullscreen();
+	if (isMobile)
+	{
+		openFullscreen();
+		MOUSEX = 80;
+		MOUSEY = windowHeight-80;
+	}
 	
 	window.socket = io();
 	
