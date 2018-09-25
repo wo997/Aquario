@@ -118,7 +118,7 @@
 		function fadeInMenu(){
 			anim.d = function(){
 				if (anim.p == 1)
-				{		
+				{
 					gameStarted = false;
 					justStarted = false;
 					getSmaller = 1;
@@ -129,7 +129,7 @@
 				}
 				if(anim.p <= 30){
 					var much = 40 - Math.cos(anim.p * Math.PI / 60) * 40;
-					ele.style.paddingTop = much;
+					ele.style.paddingTop = much + "px";
 					highScoreText.y = HEIGHT/2+115 + much + LY;
 					setAlpha(Math.sin(anim.p * Math.PI / 60));
 				}else{
@@ -145,8 +145,8 @@
 			anim.d = function(){
 				if(anim.p <= 30){
 					var much = Math.cos(anim.p * Math.PI / 60) * 40;
-					ele.style.paddingTop = much;
-					highScoreText.y = HEIGHT/2+115 + much + LY
+					ele.style.paddingTop = much + "px";
+					highScoreText.y = HEIGHT/2+115 + much + LY;
 					setAlpha(1 - Math.sin(anim.p * Math.PI / 60));
 				} else {
 					document.getElementById("lol").style.display = "none";
@@ -574,7 +574,7 @@ function controlMobile(event,down)
 	{
 		var mx = event.touches[i].pageX;
 		var my = event.touches[i].pageY;
-		if (my < windowWidth / 2) moveMouseTo(mx+20,my+20,false);
+		if (my < windowWidth / 2) moveMouseTo(mx+30,my+30,false);
 		else LMB = true;
 	}
 }
