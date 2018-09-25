@@ -20,15 +20,14 @@
 		}
 		
 		function exitFullscreen() {
-			alert("kurwa");
-			if (document.body.exitFullscreen) {
-				document.body.exitFullscreen();
-			} else if (document.body.webkitExitFullscreen) {
-				document.body.webkitExitFullscreen();
-			} else if (document.body.mozCancelFullScreen) {
-				document.body.mozCancelFullScreen();
-			} else if (document.body.msExitFullscreen) {
-				document.body.msExitFullscreen();
+			if (document.exitFullscreen) {
+				document.exitFullscreen();
+			} else if (document.webkitExitFullscreen) {
+				document.webkitExitFullscreen();
+			} else if (document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if (document.msExitFullscreen) {
+				document.msExitFullscreen();
 			}
 		}
 		
@@ -787,9 +786,9 @@ function startGame()
 	randomizePlankton();
 	
 	levelAlert = 0;
-	
-	MOUSEX = 0;
-	MOUSEY = 0;
+		
+	MOUSEX = 80;
+	MOUSEY = windowHeight-80;
 	
 	HPsmooth = 100;
 	O2smooth = 100;
@@ -1931,12 +1930,7 @@ function startSocket()
 	
 	bubbleSnd.play();
 
-	if (isMobile)
-	{
-		openFullscreen();
-		MOUSEX = 80;
-		MOUSEY = windowHeight-80;
-	}
+	if (isMobile) openFullscreen();
 	
 	window.socket = io();
 	
