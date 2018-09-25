@@ -19,6 +19,18 @@
 		  }
 		}
 		
+		function  exitFullscreen() {
+			if (document.body.exitFullscreen) {
+				document.body.exitFullscreen();
+			} else if (document.body.webkitExitFullscreen) {
+				document.body.webkitExitFullscreen();
+			} else if (document.body.mozCancelFullScreen) {
+				document.body.mozCancelFullScreen();
+			} else if (document.body.msExitFullscreen) {
+				document.body.msExitFullscreen();
+			}
+		}
+		
 		if (!window.requestAnimationFrame)
         window.requestAnimationFrame = function(callback, element) {
             var currTime = new Date().getTime();
@@ -126,6 +138,7 @@
 					document.getElementById('conn').style.visibility = 'hidden';
 					highScoreText.text = 'Your highest score: ' + highScore;
 					canPlay = true;
+					if (isMobile) exitFullscreen();
 				}
 				if(anim.p <= 30){
 					var much = 40 - Math.cos(anim.p * Math.PI / 60) * 40;
@@ -1818,7 +1831,7 @@ function randomizeBottom()
 	BOTTOM = [Math.random()-0.5];
 	
 	var vel = 0;
-	for (x=1;x<BOUNDRIGHT/BOTTOMSIZE+2;x++)
+	for (x=1;x<BOUNDRIGHT/BOTTOMSIZE+50;x++)
 	{
 		vel = 0.99*vel + pseudoRandom(x);
 		BOTTOM.push((BOTTOM[x-1] + vel) * 0.5);
