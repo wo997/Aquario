@@ -1614,7 +1614,7 @@ function control()
 	if (SCROLLX<0) SCROLLX = 0;
 	if (SCROLLX>BOUNDRIGHT-WIDTH) SCROLLX = BOUNDRIGHT-WIDTH;
 	
-	if (isMobile) FISH[PLAYERID][6] = -Math.PI/2-Math.atan2(MOUSEX-80,MOUSEY-HEIGHT+80);
+	if (isMobile) FISH[PLAYERID][6] = -Math.PI/2-Math.atan2(MOUSEX-80,MOUSEY-windowHeight+80);
 	else FISH[PLAYERID][6] = -Math.PI/2-Math.atan2(MOUSEX+SCROLLX-x,MOUSEY+SCROLLY-y);
 	
 	FISH[PLAYERID][7] = LMB;
