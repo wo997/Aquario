@@ -481,7 +481,6 @@ function resize() {
 		HEIGHT = WIDTH;
 		WIDTH = temp;
 		
-		
 		document.body.style.transform = "rotate(90deg)";
 		document.body.style.top = "-"+(HEIGHT)+"px";
 	}
@@ -491,11 +490,8 @@ function resize() {
 		document.body.style.top = "0";
 	}
 	
-	windowWidth = WIDTH;
-	windowHeight = HEIGHT;
-	
-	var minHeight = 400;
-	var minWidth = 500;
+	var minHeight = 250;
+	var minWidth = 350;
 	var maxHeight = 1000;
 	var maxWidth = 1600;
 
@@ -512,13 +508,16 @@ function resize() {
 	SCALE = 600/smaller;
 	if (SCALE<1) SCALE = 1;
 	
+	windowWidth = WIDTH * SCALE;
+	windowHeight = HEIGHT * SCALE;
+	
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
 	
 	this.renderer.resize(WIDTH, HEIGHT);
 	
-	scoreMeText.x = WIDTH*SCALE-120;
-	scoreText.x = WIDTH*SCALE-120;
+	scoreMeText.x = windowWidth-120;
+	scoreText.x = windowWidth-120;
 	
 	chatText.x = chatMeText.x = 0.07*WIDTH;
 	chatText.y = chatMeText.y = HEIGHT-100;
@@ -538,11 +537,11 @@ function resize() {
 	
 	skywater.width = WIDTH;
 	
-	diedText.x = WIDTH*SCALE/2;
-	diedText.y = HEIGHT*SCALE/2-150;
+	diedText.x = windowWidth/2;
+	diedText.y = windowHeight/2-150;
 	
-	highScoreText.x = WIDTH*SCALE/2;
-	highScoreText.y = HEIGHT*SCALE/2+150;
+	highScoreText.x = windowWidth/2;
+	highScoreText.y = windowHeight/2+150;
 	
 	/*var scale = 0.5;
 	document.body.style.transform = 'scale(' + scale + ')';
@@ -559,7 +558,7 @@ function resize() {
 	LX = (SCALE-1)*WIDTH/2;
 	LY = (SCALE-1)*HEIGHT/2;
 	
-	skywater.width = WIDTH*SCALE;
+	skywater.width = windowWidth;
 	
 	customize.marginTop = (Math.floor(150/SCALE)+50)+"px";
 	title.marginBottom = (Math.floor(60/SCALE)-85)+"px";
@@ -571,7 +570,7 @@ function controlMobile(event,down)
 	{
 		var mx = event.touches[i].pageX;
 		var my = event.touches[i].pageY;
-		if (mx < WIDTH / 2) moveMouseTo(mx,my,false);
+		if (mx < windowWidth / 2) moveMouseTo(mx,my,false);
 		else LMB = down;
 	}
 }
@@ -608,7 +607,7 @@ function init() {
 	skywater = new PIXI.Sprite(PIXI.Texture.fromImage("htdocs/skywater.png"));
 	skywater.position.x = 0;
 	skywater.position.y = 0;
-	skywater.width = WIDTH*SCALE;
+	skywater.width = windowWidth;
 	skywater.height = 3000;//HEIGHT?;
 	
 	boat = new PIXI.Sprite(PIXI.Texture.fromImage("htdocs/boat.png"));
@@ -931,7 +930,7 @@ function update(time)
 			
 			var mx = FX-SCROLLX;
 			var my = FY-SCROLLY;
-			if (mx+LX>-30*SIZE && mx+LX<WIDTH*SCALE+30*SIZE && my+LY>-30*SIZE && my+LY<HEIGHT*SCALE+30*SIZE) renderShark();
+			if (mx+LX>-30*SIZE && mx+LX<windowWidth+30*SIZE && my+LY>-30*SIZE && my+LY<windowHeight+30*SIZE) renderShark();
 		}
 		
 		for (i=0;i<FISH.length;i++)
@@ -1071,16 +1070,16 @@ function update(time)
 			
 			var mx = FX-SCROLLX;
 			var my = FY-SCROLLY;
-			if (mx+LX>-25*SIZE-20 && mx+LX<WIDTH*SCALE+25*SIZE+20)
+			if (mx+LX>-25*SIZE-20 && mx+LX<windowWidth+25*SIZE+20)
 			{
-				if (my+LY>-25*SIZE && my+LY<HEIGHT*SCALE+25*SIZE)
+				if (my+LY>-25*SIZE && my+LY<windowHeight+25*SIZE)
 				{
 					type = FISH[i][11];
 					renderFish(false);
 				}
 				
 				my = FY-SIZE*33-30-SCROLLY;
-				if (my+LX>-25*SIZE && my+LY<HEIGHT*SCALE+25*SIZE)
+				if (my+LX>-25*SIZE && my+LY<windowHeight+25*SIZE)
 				{
 					displayNames[i].x = LX + mx;
 					displayNames[i].y = LY + my;
@@ -1295,7 +1294,7 @@ function face()
 	}
 	
 	C.beginFill(0x000000,0.3);
-	C.drawRoundedRect(WIDTH*SCALE-230,15,220,250,10);
+	C.drawRoundedRect(windowWidth-230,15,220,250,10);
 	C.endFill();
 	
 	if (listOnce > 100)
@@ -1370,8 +1369,7 @@ function face()
 	}
 	
 	if (isMobile)
-	{
-		
+	{		
 		C.beginFill(0x000000,0.2);
 		C.arc(80,windowHeight-80,70,0,2*Math.PI);
 		C.drawRoundedRect(windowWidth-150,windowHeight-150,140,140,30);
@@ -1379,10 +1377,10 @@ function face()
 		
 		C.beginFill(0xFFFFFF,0);
 		C.lineStyle(5+2*LMB,0xFFFFFF,0.4+0.2*LMB);
-		C.moveTo(2*windowWidth-120,2*windowHeight-80);
-		C.lineTo(2*windowWidth-40,2*windowHeight-80);
-		C.moveTo(2*windowWidth-80,2*windowHeight-120);
-		C.lineTo(2*windowWidth-80,2*windowHeight-40);
+		C.moveTo(windowWidth-120,windowHeight-80);
+		C.lineTo(windowWidth-40,windowHeight-80);
+		C.moveTo(windowWidth-80,windowHeight-120);
+		C.lineTo(windowWidth-80,windowHeight-40);
 		C.endFill();
 		
 		C.beginFill(0xFFFFFF,0);
@@ -1423,7 +1421,7 @@ function renderFish(myFishCover)
 		{
 			C.lineStyle(null);
 			C.beginFill(0x006699,Math.round(OP*10)/10);
-			C.drawRect(0,0,WIDTH*SCALE,HEIGHT*SCALE);
+			C.drawRect(0,0,windowWidth,windowHeight);
 			C.endFill();
 		}
 	}
@@ -1623,14 +1621,14 @@ function renderBottom()
 	C.lineStyle(2, 0x6E652B);
 	C.beginFill(0x817639);
 	
-	moveTo2(-LX,2*HEIGHT*SCALE);
+	moveTo2(-LX,2*windowHeight);
 	
-	for (x=-Math.ceil(LX/BOTTOMSIZE);x<WIDTH*SCALE/BOTTOMSIZE+2;x++)
+	for (x=-Math.ceil(LX/BOTTOMSIZE);x<windowWidth/BOTTOMSIZE+2;x++)
 	{
 		lineTo2(x*BOTTOMSIZE-mod(SCROLLX,BOTTOMSIZE),BOTTOM[x+Math.floor(SCROLLX/BOTTOMSIZE)]-SCROLLY);
 	}
 	
-	lineTo2(WIDTH*SCALE-LX,2*HEIGHT);
+	lineTo2(windowWidth-LX,2*HEIGHT);
 	C.endFill();
 }
 
@@ -1638,7 +1636,7 @@ function renderGreenShit()
 {
 	//C.beginFill(0x118833);
 	
-	for (x=-Math.ceil(LX/BOTTOMSIZE);x<WIDTH*SCALE/BOTTOMSIZE+2;x++)
+	for (x=-Math.ceil(LX/BOTTOMSIZE);x<windowWidth/BOTTOMSIZE+2;x++)
 	{
 		var which = x+Math.floor(SCROLLX/BOTTOMSIZE);
 		var type = (2*which+which%11-which%5)%16;
@@ -1699,7 +1697,7 @@ function moveMouseTo(px,py,click)
 	{
 		if (isMobile)
 		{
-			MOUSEY = window.innerWidth-px;
+			MOUSEY = windowHeight-px;
 			MOUSEX = py;
 		}
 		else
@@ -1714,7 +1712,6 @@ function moveMouseTo(px,py,click)
 		MOUSEX = px;
 		MOUSEY = py;
 	}
-	if (click && !gameStarted) LMB = true;
 	
 	if (isMobile)
 	{	
@@ -1728,6 +1725,7 @@ function moveMouseTo(px,py,click)
 			MOUSEY += vy*(70-len)/len;
 		}
 	}
+	else if (click && !gameStarted) LMB = true;
 }
 
 function mouseDown(e)
@@ -1795,13 +1793,13 @@ function renderWater()
 	C.lineStyle(3, 0xFFFFFF, 0.1);
 	C.beginFill(0x006699, 0.4);
 	
-	moveTo2(-LX,HEIGHT*SCALE);
+	moveTo2(-LX,windowHeight);
 	
-	for (x=-2-LX;x<WIDTH*SCALE+15;x+=15)
+	for (x=-2-LX;x<windowWidth+15;x+=15)
 	{
 		lineTo2(x,2*Math.sin(0.1*(x+SCROLLX+TIME))-SCROLLY);
 	}
-	lineTo2(WIDTH*SCALE,HEIGHT*SCALE);
+	lineTo2(windowWidth,windowHeight);
 	C.endFill();
 }
 
@@ -1868,7 +1866,7 @@ function renderPlankton()
 		px += 5*Math.sin(px*0.01+TIME*0.05);
 		var mx = px-SCROLLX;
 		var my = PLANKTON[i][1]-SCROLLY;
-		if (mx+LX>-10 && mx+LX<WIDTH*SCALE+10 && my+LY>-10 && my+LY<HEIGHT*SCALE+10)
+		if (mx+LX>-10 && mx+LX<windowWidth+10 && my+LY>-10 && my+LY<windowHeight+10)
 			drawCircle2(mx,my,6+i%3);
 	}
 	C.endFill();
@@ -1882,7 +1880,7 @@ function renderPlankton()
 		px += 5*Math.sin(px*0.01+TIME*0.05);
 		var mx = px-SCROLLX;
 		var my = PLANKTON[i][1]-SCROLLY;
-		if (mx+LX>-10 && mx+LX<WIDTH*SCALE+10 && my+LY>-10 && my+LY<HEIGHT*SCALE+10)
+		if (mx+LX>-10 && mx+LX<windowWidth+10 && my+LY>-10 && my+LY<windowHeight+10)
 			drawCircle2(mx,my,10);
 	}
 	C.endFill();
