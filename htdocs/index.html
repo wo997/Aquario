@@ -80,7 +80,7 @@
 			
 			var hai = ele.style.paddingTop;
 			var top = +hai.substr(0,hai.length-2)+HEIGHT/2;
-			if (dis(MOUSEX+137/SCALE-WIDTH/2,MOUSEY-70/SCALE-HEIGHT/2)<2500)
+			if (dis(MOUSEX+137/SCALE-windowWidth/2,MOUSEY-70/SCALE-windowHeight/2)<2500)
 			{
 				C.lineStyle(2,0x999999,OP);
 				C.beginFill(0xFFFFFF,OP);
@@ -102,10 +102,7 @@
 			C.closePath();
 			C.endFill();
 			
-			document.getElementById("playBtn").innerHTML = dis(MOUSEX-137/SCALE-WIDTH/2,MOUSEY-70/SCALE-HEIGHT/2);
-			document.getElementById("nickname").value = LMB;
-			
-			if (dis(MOUSEX-137/SCALE-WIDTH/2,MOUSEY-70/SCALE-HEIGHT/2)<2500)
+			if (dis(MOUSEX-137/SCALE-windowWidth/2,MOUSEY-70/SCALE-windowHeight/2)<2500)
 			{
 				C.lineStyle(2,0x999999,OP);
 				C.beginFill(0xFFFFFF,OP);
