@@ -177,11 +177,14 @@
 			ele.style.opacity = op;
 			scoreText.alpha = 1-op;
 			scoreMeText.alpha = 1-op;
+			if (!isMobile)
+			{
+				chatText.alpha = (1-op) * (CHATACTIVE?0.75:0.25);
+				chatMeText.alpha = (1-op) * (CHATACTIVE?0.75:0.25);
+			}
 			hpText.alpha = 1-op;
 			o2Text.alpha = 1-op;
 			highScoreText.alpha = op;
-			chatText.alpha = (1-op) * (CHATACTIVE?0.75:0.25);
-			chatMeText.alpha = (1-op) * (CHATACTIVE?0.75:0.25);
 			if (diedText.alpha>0) diedText.alpha -= 0.05;
 			for (i=0;i<FISH.length;i++) {
 				displayNames[i].alpha = 1-op;
@@ -587,8 +590,16 @@ function controlMobile(event,down)
 	{
 		var mx = event.touches[i].pageX;
 		var my = event.touches[i].pageY;
-		if (my < windowWidth / 2) moveMouseTo(mx+30,my+30,false);
-		else LMB = true;
+		if (gameStarted)
+		{
+			if (my < windowWidth / 2) moveMouseTo(mx+30,my+30,false);
+			else LMB = true;
+		}
+		else
+		{
+			moveMouseTo(mx+30,my+30,false);
+			LMB = true;
+		}
 	}
 }
 
@@ -1999,7 +2010,7 @@ function startSocket()
 			FISH[i][10] = fis.data[i][10];
 			
 			var nextHp = fis.data[i][9];
-			if (nextHp<FISH[i][9])
+			if (nextHp<FISH[i][9] && fis.data[i][1] > 10)
 			{
 				vol = 50000 / (150000 + dis(FISH[i][0]-FISH[PLAYERID][0],FISH[i][1]-FISH[PLAYERID][1]));
 				//console.log(vol);
