@@ -599,7 +599,6 @@ function controlMobile(event,down)
 		{
 			moveMouseTo(mx,my,true);
 			LMB = true;
-			alert(mx+" : "+my);
 		}
 	}
 }
@@ -1743,8 +1742,9 @@ function moveMouseTo(px,py,click)
 		MOUSEX = px;
 		MOUSEY = py;
 	}
+	}
 	
-	if (isMobile)
+	if (isMobile && gameStarted)
 	{	
 		var vx = MOUSEX - 80;
 		var vy = MOUSEY - windowHeight + 80;
