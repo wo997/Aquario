@@ -102,6 +102,9 @@
 			C.closePath();
 			C.endFill();
 			
+			document.getElementById("playBtn").innerHTML = dis(MOUSEX-137/SCALE-WIDTH/2,MOUSEY-70/SCALE-HEIGHT/2);
+			document.getElementById("nickname").value = LMB;
+			
 			if (dis(MOUSEX-137/SCALE-WIDTH/2,MOUSEY-70/SCALE-HEIGHT/2)<2500)
 			{
 				C.lineStyle(2,0x999999,OP);
@@ -593,16 +596,16 @@ function controlMobile(event,down)
 	}
 	for (i=0;i<event.touches.length;i++)
 	{
-		var mx = event.touches[i].pageX;
-		var my = event.touches[i].pageY;
+		var mx = event.touches[i].pageX*SCALE;
+		var my = event.touches[i].pageY*SCALE;
 		if (gameStarted)
 		{
-			if (my < windowWidth / 2) moveMouseTo(mx+30,my+30,false);
+			if (my < windowWidth / 2) moveMouseTo(mx,my,false);
 			else LMB = true;
 		}
 		else
 		{
-			moveMouseTo(mx*SCALE,my*SCALE,true);
+			moveMouseTo(mx,my,true);
 			LMB = true;
 		}
 	}
