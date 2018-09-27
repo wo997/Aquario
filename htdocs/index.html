@@ -440,7 +440,9 @@ var SHARK = []; // px,py,size,vel,dir,targetDir
 var SHARKTO = [];
 var BOUNDRIGHT = 7000;
 
-for (i=0;i<10;i++)
+const HOWMANYSLOTS = 10;
+
+for (i=0;i<HOWMANYSLOTS;i++) // same amount of sharks and fish - 10 per each type
 {
 	FISH.push([0,0,0,0,0,0,0,0,"",0,0,0]);
 	POSTO.push([0,0,0,0,0]);
@@ -2010,7 +2012,7 @@ function startSocket()
 			FISH[i][10] = fis.data[i][10];
 			
 			var nextHp = fis.data[i][9];
-			if (nextHp<FISH[i][9] && fis.data[i][1] > 10)
+			if (nextHp<FISH[i][9] && fis.data[i][1] > 0)
 			{
 				vol = 50000 / (150000 + dis(FISH[i][0]-FISH[PLAYERID][0],FISH[i][1]-FISH[PLAYERID][1]));
 				//console.log(vol);
@@ -2031,7 +2033,7 @@ function startSocket()
 			if (turn>1) turn = 1;
 			if (turn<-1) turn = -1;
 			
-			POSTO[i][3] = dir + 0.7*timeAhead*turn/(10+2*SIZE);
+			POSTO[i][3] = dir + timeAhead*turn/(10+2*SIZE);
 			
 			if (FISH[i][8] != fis.data[i][8]) // new fish in - different name
 			{				
