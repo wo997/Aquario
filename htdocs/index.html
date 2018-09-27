@@ -1023,7 +1023,7 @@ function update(time)
 					else
 						socket.emit("yummy");
 						
-					pointSnd.play();
+					if (i == PLAYERID) pointSnd.play();
 					
 					var x = Math.random()*(BOUNDRIGHT-2800)+1400;
 					if (x-SCROLLX>-10 && x-SCROLLX<WIDTH+10)
