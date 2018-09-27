@@ -555,6 +555,11 @@ function HANDLEGAME()
 			if (Math.random() < 0.03)
 				FISH[i][7] = true;
 			
+			var dir2 = FISH[i][6];
+			
+			var SIN = Math.sin(dir2);
+			var COS = Math.cos(dir2);
+			
 			var s1 = sensor(FX+COS*len+SIN*shift,FY+SIN*len-COS*shift);
 			var s2 = sensor(FX+COS*len-SIN*shift,FY+SIN*len+COS*shift);
 			
