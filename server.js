@@ -618,7 +618,7 @@ function HANDLEGAME()
 			
 			if (dx*dx+dy*dy < squared(SIZE*8+s2*19))
 			{
-				var ratio = 0.09*Math.sqrt(SIZE/s2);
+				var ratio = 0.15*Math.sqrt(SIZE/s2);
 				gain(i,ratio);
 				lose(a,ratio);
 				if (FISH[a][9] <= 0) gain(i,FISH[a][2]);
