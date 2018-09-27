@@ -563,9 +563,9 @@ function HANDLEGAME()
 			var s1 = sensor(FX+COS2*len+SIN2*shift,FY+SIN2*len-COS2*shift);
 			var s2 = sensor(FX+COS2*len-SIN2*shift,FY+SIN2*len+COS2*shift);
 			
-			if (s1 && Math.random()<0.3) FISH[i][6] -= 0.4;
-			if (s2 && Math.random()<0.3) FISH[i][6] += 0.4;
-			if (s1 && s2 && Math.random()<0.3)
+			if (s1 && Math.random()<0.3) FISH[i][6] += 0.4;
+			if (s2 && Math.random()<0.3) FISH[i][6] -= 0.4;
+			if ((s1 && s2 || FY < 30) && Math.random()<0.3)
 			{
 				FISH[i][3] *= 0.72;
 				FISH[i][6] += Math.PI;
