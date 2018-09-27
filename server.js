@@ -557,11 +557,11 @@ function HANDLEGAME()
 			
 			var dir2 = FISH[i][6];
 			
-			var SIN = Math.sin(dir2);
-			var COS = Math.cos(dir2);
+			var SIN2 = Math.sin(dir2);
+			var COS2 = Math.cos(dir2);
 			
-			var s1 = sensor(FX+COS*len+SIN*shift,FY+SIN*len-COS*shift);
-			var s2 = sensor(FX+COS*len-SIN*shift,FY+SIN*len+COS*shift);
+			var s1 = sensor(FX+COS2*len+SIN2*shift,FY+SIN2*len-COS2*shift);
+			var s2 = sensor(FX+COS2*len-SIN2*shift,FY+SIN2*len+COS2*shift);
 			
 			if (s1) FISH[i][6] += 0.4;
 			if (s2) FISH[i][6] -= 0.4;
