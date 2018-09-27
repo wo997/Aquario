@@ -224,7 +224,7 @@ io.on('connection',function(s){
 });
 
 var colors = [255,65535,16776960,16711935,65280,16711680];
-var names = ["jeff","tiger","pizza","fish","hello","superhero","puppy","selena","ariana","siemka","andrew"];
+var names = ["jeff","tiger","pizza","fish","hello","superhero","puppy","selena","ariana","siemka","andrew","pineapple","love","hell"];
 var possible = "abcdefghijklmnopqrstuvwxyz123456789";
 
 function addBot()
@@ -606,8 +606,8 @@ function HANDLEGAME()
 				}
 			}
 		}
-		
-		FISH[i][2] -= 0.00004*(SIZE-0.7)*(120-FISH[i][9]);
+		else 			
+			FISH[i][2] -= 0.00004*(SIZE-0.7)*(120-FISH[i][9]);
 		
 		if (huntId != i && FX>boatX-130+SIZE*10 && FX<boatX+125-SIZE*10 && FY+10*SIZE<-20 && FY+10*SIZE>-28 && SIN>0)
 		{
