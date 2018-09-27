@@ -33,6 +33,7 @@ app.get('/', function(req, res){
 app.use('/htdocs', express.static(__dirname+'/htdocs'));
 
 const HOWMANYSLOTS = 10;
+const BOTMAXCOUNT = 6;
 
 var SLOTS = [];
 for (i=0;i<HOWMANYSLOTS;i++) SLOTS.push(false);
@@ -222,6 +223,78 @@ io.on('connection',function(s){
 	});
 });
 
+var colors = [255,65535,16776960,16711935,65280,16711680];
+var names = ["jeff","tiger","pizza","fish","hello","superhero","puppy","selena","ariana","siemka","andrew"];
+var possible = "abcdefghijklmnopqrstuvwxyz123456789";
+
+function addBot()
+{
+	for (i=0;i<BOTMAXCOUNT;i++)
+	{
+		if (!SLOTS[i])
+		{
+			slotID[i] = "bot";
+			SLOTS[i] = true;
+			
+			var name = "";
+			if (Math.random()<0.2)
+			{
+				for (ind = 0; ind < Math.random()*5+3; ind++)
+					name += possible.charAt(Math.floor(Math.random() * possible.length));
+			}
+			else
+			{
+				name = names[Math.floor(Math.random()*names.length-0.01)];
+				for (ind = 0; ind < Math.random()*8-5; ind++)
+					name += (Math.floor(Math.random()*8.99)+1);
+			}
+		
+			var notmore = 0;
+			var contains;
+			
+			do
+			{
+				contains = false;
+				
+				for (a=0;a<FISH.length;a++)
+				{
+					if (name==FISH[a][8])
+					{
+						name += ""+Math.floor(Math.random()*9.999);
+						contains = true;
+					}
+				}
+				
+				notmore++;
+			}
+			while (notmore<5 && contains)
+		
+			var sx = 3000+(BOUNDRIGHT-6000)*Math.random();
+			var sy = 100+600*Math.random();
+			
+			if (!isSafe(sx,sy))
+			{
+				for (x=3000;x<BOUNDRIGHT-3000;x+=500)
+				{
+					for (y=100;y<400;y+=300)
+					{
+						if (isSafe(x,y))
+						{
+							sx = x;
+							sy = y;
+							x=100000;
+							break;
+						}
+					}
+				}
+			}
+			
+			FISH[i] = [sx,sy,Math.random()*3+1,0,0,colors[Math.floor(Math.random()*5.99)],0,0,name,100,100,Math.floor(Math.random()*2.99)+1];
+			i=100000000;
+		}
+	};
+}
+
 function gain(i,get)
 {
 	if (FISH[i][9]<100)
@@ -280,11 +353,14 @@ function isSafe(x,y)
 
 function disconnectPlayer(i)
 {
-	var con = io.sockets.connected[slotID[i]];
-	if (con)
+	if (slotID[i] != "bot")
 	{
-		con.emit("died");
-		con.disconnect();
+		var con = io.sockets.connected[slotID[i]];
+		if (con)
+		{
+			con.emit("died");
+			con.disconnect();
+		}
 	}
 	FISH[i] = [0,0,0,0,0,0,0,0,"",0,0];
 	slotID[i] = 0;
@@ -305,6 +381,7 @@ function getSize(s)
 	return 0.7*Math.pow(s,0.35);
 }
 
+var orderbotcounter = 0;
 function HANDLEGAME()
 {
 	TIME++;
@@ -313,6 +390,13 @@ function HANDLEGAME()
 	var high = Math.atan(rodUp-6);
 	var tox = boatX-whereGoes*(65-(high+1.2)*(high+1.2)*2);
 	var toy = -50-20*high;
+	
+	if (orderbotcounter < 300) orderbotcounter++;
+	else
+	{
+		orderbotcounter = 0;
+		addBot();
+	}
 	
 	if (veinLen==0)
 	{
@@ -419,6 +503,9 @@ function HANDLEGAME()
 	boatVX *= 0.98;
 	boatX += boatVX;	
 	
+	var len = 270 + 80 * Math.sin(TIME*0.02);
+	var shift = 150 + 80 * Math.sin(TIME*0.0066);
+	
 	for (i=0;i<FISH.length;i++)
 	{
 		if (FISH[i][0]==0) continue;
@@ -456,6 +543,64 @@ function HANDLEGAME()
 		FISH[i][1] += VEL*SIN*2;
 		var mouthX = FX + COS*SIZE*18;
 		var mouthY = FY + SIN*SIZE*18;
+		
+		if (slotID[i] == "bot")
+		{
+			if (Math.random() < 0.3)
+				FISH[i][6] += Math.random()*2.5*(Math.random()-0.5);
+			
+			if (Math.random() < 0.05)
+				FISH[i][7] = false;
+			
+			if (Math.random() < 0.03)
+				FISH[i][7] = true;
+			
+			var s1 = sensor(FX+COS*len+SIN*shift,FY+SIN*len-COS*shift);
+			var s2 = sensor(FX+COS*len-SIN*shift,FY+SIN*len+COS*shift);
+			
+			if (s1) FISH[i][6] += 0.4;
+			if (s2) FISH[i][6] -= 0.4;
+			if (s1 && s2)
+			{
+				FISH[i][3] *= 0.72;
+				FISH[i][6] += Math.PI;
+			}
+			
+			var followClosest = 10000000;
+			
+			for (a=0;a<FISH.length;a++)
+			{
+				if (FISH[a][0]==0 || a==i) continue;
+				
+				var dx = mouthX-FISH[a][0];
+				var dy = mouthY-FISH[a][1];
+				var dist = dx*dx+dy*dy;
+				
+				if (dist<60000 && Math.random()<0.06)
+				{
+					if (dist < followClosest)
+					{
+						followClosest = dist;
+						FISH[i][6] = Math.atan2(dy,dx) + Math.random()*0.3-0.15;
+						if (Math.random() < 0.3) FISH[i][6] += 3.14;
+						
+						if (dist < 15000*Math.random()) FISH[i][7] = true;
+					}
+				}
+			}
+			
+			for (a=0;a<SHARK.length;a++)
+			{
+				var dx = SHARK[a][0]-mouthX;
+				var dy = SHARK[a][1]-mouthY;
+				var dist = dx*dx+dy*dy;
+				
+				if (dist<10000 && Math.random()<0.25)
+				{
+					FISH[i][7] = true;
+				}
+			}
+		}
 		
 		FISH[i][2] -= 0.00004*(SIZE-0.7)*(120-FISH[i][9]);
 		
@@ -545,9 +690,6 @@ function HANDLEGAME()
 		}
 	}
 	
-	var len = 270 + 80 * Math.sin(TIME*0.02);
-	var shift = 150 + 80 * Math.sin(TIME*0.0066);
-	
 	for (i=0;i<SHARK.length;i++)
 	{
 		var fish = SHARK[i];
@@ -601,7 +743,7 @@ function HANDLEGAME()
 			{
 				if (dist < followClosest)
 				{
-					followClosest = dist
+					followClosest = dist;
 					SHARK[i][5] = Math.atan2(dy,dx);
 					
 					var dx = FISH[a][0]-FX;
