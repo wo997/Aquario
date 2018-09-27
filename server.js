@@ -224,7 +224,7 @@ io.on('connection',function(s){
 });
 
 var colors = [255,65535,16776960,16711935,65280,16711680];
-var names = ["jeff","tiger","pizza","fish","hello","superhero","puppy","selena","ariana","siemka","andrew","pineapple","love","hell"];
+var names = ["jeff","tiger","pizza","fish","hello","superhero","puppy","selena","ariana","siemka","andrew","pineapple","love","hell","steve"];
 var possible = "abcdefghijklmnopqrstuvwxyz123456789";
 
 function addBot()
@@ -391,7 +391,7 @@ function HANDLEGAME()
 	var tox = boatX-whereGoes*(65-(high+1.2)*(high+1.2)*2);
 	var toy = -50-20*high;
 	
-	if (orderbotcounter < 300) orderbotcounter++;
+	if (orderbotcounter < 30) orderbotcounter++;
 	else
 	{
 		orderbotcounter = 0;
@@ -504,7 +504,7 @@ function HANDLEGAME()
 	boatX += boatVX;	
 	
 	var len = 270 + 80 * Math.sin(TIME*0.02);
-	var shift = 150 + 80 * Math.sin(TIME*0.0066);
+	var shift = 150 + 60 * Math.sin(TIME*0.0066);
 	
 	for (i=0;i<FISH.length;i++)
 	{
@@ -546,33 +546,30 @@ function HANDLEGAME()
 		
 		if (slotID[i] == "bot")
 		{
-			if (Math.random() < 0.3)
-				FISH[i][6] += Math.random()*2.5*(Math.random()-0.5);
-			
 			if (Math.random() < 0.05)
 				FISH[i][7] = false;
 			
 			if (Math.random() < 0.03)
 				FISH[i][7] = true;
 			
-			var dir2 = FISH[i][6];
+			var SIN2 = Math.sin(fish[6]);
+			var COS2 = Math.cos(fish[6]);
 			
-			var SIN2 = Math.sin(dir2);
-			var COS2 = Math.cos(dir2);
+			var s1 = sensor(FX-COS2*len+SIN2*shift,FY-SIN2*len-COS2*shift);
+			var s2 = sensor(FX-COS2*len-SIN2*shift,FY-SIN2*len+COS2*shift);
 			
-			var s1 = sensor(FX+COS2*len+SIN2*shift,FY+SIN2*len-COS2*shift);
-			var s2 = sensor(FX+COS2*len-SIN2*shift,FY+SIN2*len+COS2*shift);
-			
-			if (s1 && Math.random()<0.3) FISH[i][6] += 0.4;
-			if (s2 && Math.random()<0.3) FISH[i][6] -= 0.4;
-			if (s1 && s2 && Math.random()<0.3)
+			if (FY > 200 || Math.random() < 0.05)
 			{
-				FISH[i][3] *= 0.72;
-				FISH[i][6] += Math.PI;
+				if (s1) FISH[i][6] -= 0.4;
+				if (s2) FISH[i][6] += 0.4;
 			}
-			if (FY < 30 && Math.random()<0.2)
+			if (s1 && s2)
 			{
 				FISH[i][6] = Math.random() - 2;
+			}
+			else if (Math.random() < 0.2)
+			{
+				FISH[i][6] += Math.random()*0.5*(Math.random()-0.5);
 			}
 			
 			var followClosest = 10000000;
@@ -585,7 +582,7 @@ function HANDLEGAME()
 				var dy = mouthY-FISH[a][1];
 				var dist = dx*dx+dy*dy;
 				
-				if (dist<60000 && Math.random()<0.06)
+				if (dist<60000 && Math.random() < (FISH[i][4]>FISH[a][4] ? 0.2 : 0.05))
 				{
 					if (dist < followClosest)
 					{
@@ -593,7 +590,7 @@ function HANDLEGAME()
 						FISH[i][6] = Math.atan2(dy,dx) + Math.random()*0.3-0.15;
 						if (Math.random() < 0.3) FISH[i][6] += 3.14;
 						
-						if (dist < 15000*Math.random()) FISH[i][7] = true;
+						if (dist < 20000*Math.random()) FISH[i][7] = true;
 					}
 				}
 			}
