@@ -676,7 +676,7 @@ function HANDLEGAME()
 			if (much>0)
 			{
 				if (much>5) much = 5;
-				FISH[i][4] += much * (COS>0?0.04:-0.04)/(Math.abs(VEL)+0.1);
+				FISH[i][4] += much * (COS>0?0.02:-0.02)/(Math.abs(VEL)+0.05);
 				FISH[i][3] += much * SIN * 0.05;
 				FISH[i][1] += 0.2;
 			}
