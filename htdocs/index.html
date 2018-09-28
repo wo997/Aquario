@@ -1085,7 +1085,7 @@ function update(time)
 				if (much>0)
 				{
 					if (much>5) much = 5;
-					POSTO[i][3] += much * (COS>0?0.02:-0.02)/(Math.abs(VEL)+0.1) * deltaTime;
+					POSTO[i][3] += much * (COS>0?0.01:-0.01)/(Math.abs(VEL)+0.05) * deltaTime;
 					POSTO[i][2] += much * SIN * 0.025 * deltaTime;
 					POSTO[i][0] += 0.1;
 				}
