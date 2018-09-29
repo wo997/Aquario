@@ -621,7 +621,7 @@ function HANDLEGAME()
 			var dy = FISH[a][1]-mouthY;
 			var s2 = getSize(FISH[a][2]);
 			
-			if (dx*dx+dy*dy < squared(SIZE*8+s2*19))
+			if (dx*dx+dy*dy < squared(SIZE*8+s2*19)+250)
 			{
 				var ratio = 0.15*Math.sqrt(SIZE/s2);
 				gain(i,ratio);
