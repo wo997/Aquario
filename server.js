@@ -391,7 +391,7 @@ function HANDLEGAME()
 	var tox = boatX-whereGoes*(65-(high+1.2)*(high+1.2)*2);
 	var toy = -50-20*high;
 	
-	if (orderbotcounter < 30) orderbotcounter++;
+	if (orderbotcounter < 300) orderbotcounter++;
 	else
 	{
 		orderbotcounter = 0;
@@ -411,8 +411,7 @@ function HANDLEGAME()
 			if (TIME>boatWaitTarget && rodUp==0)
 			{
 				boatStop = false;
-				boatTargetX += 0.5*(1000+500*Math.random()) * (Math.floor(Math.random())*2-1); // 1000 - 1500 pixels left or right
-				// ONLY HALF NOW REMOVE LATER PLS
+				boatTargetX += (800+400*Math.random()) * (Math.floor(Math.random())*2-1); // 1000 - 1500 pixels left or right
 				if (boatTargetX < 2200)  boatTargetX += 3000;
 				if (boatTargetX > BOUNDRIGHT-2200)  boatTargetX -= 3000;
 			}
@@ -763,7 +762,7 @@ function HANDLEGAME()
 			
 			if (dist<Math.pow(SIZE*2+s2,2)*25)
 			{
-				FISH[a][9] -= 6/(2+s2);
+				FISH[a][9] -= 10/(2+s2);
 			}
 		}
 		
