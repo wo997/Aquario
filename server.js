@@ -586,8 +586,11 @@ function HANDLEGAME()
 					if (dist < followClosest)
 					{
 						followClosest = dist;
-						FISH[i][6] = Math.atan2(dy,dx) + Math.random()*0.3-0.15;
-						if (Math.random() < 0.3) FISH[i][6] += 3.14;
+						if (Math.random() < 0.2)
+						{
+							FISH[i][6] = Math.atan2(dy,dx) + Math.random()*0.3-0.15;
+							if (Math.random() < 0.3) FISH[i][6] += 3.14;
+						}
 						
 						if (dist < 20000*Math.random()) FISH[i][7] = true;
 					}
