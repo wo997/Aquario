@@ -568,7 +568,7 @@ function HANDLEGAME()
 			}
 			else if (Math.random() < 0.2)
 			{
-				FISH[i][6] += Math.random()*0.5*(Math.random()-0.5);
+				FISH[i][6] += Math.random() * Math.random() * 0.5 * (Math.random()-0.5);
 			}
 			
 			var followClosest = 10000000;
