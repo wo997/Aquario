@@ -2004,8 +2004,8 @@ function startSocket()
 			POSTO[i][4] = fis.data[i][2];
 			var vel = fis.data[i][3];
 			POSTO[i][2] = POSTO[i][2]*0.9 + vel*0.1;
-			var myTimeAhead = timeAhead + POSTO[i][2];
-			//var myTimeAhead = timeAhead + 1.3*Math.abs(POSTO[i][2]);
+			//var myTimeAhead = timeAhead + POSTO[i][2];
+			var myTimeAhead = timeAhead + 1.3*Math.abs(POSTO[i][2]);
 			var dir = fis.data[i][4];
 			FISH[i][5] = fis.data[i][5];
 			FISH[i][6] = fis.data[i][6];
