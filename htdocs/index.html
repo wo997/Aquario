@@ -493,12 +493,11 @@ function resize() {
     HEIGHT = window.innerHeight;
 	
 	vertical = (WIDTH<HEIGHT && isMobile);
-	vertical = true;
 	if (vertical)
 	{
-		var temp = HEIGHT;
+		/*var temp = HEIGHT;
 		HEIGHT = WIDTH;
-		WIDTH = temp;
+		WIDTH = temp;*/
 		
 		document.body.style.transform = "rotate(90deg)";
 		document.body.style.top = "-"+(HEIGHT)+"px";
