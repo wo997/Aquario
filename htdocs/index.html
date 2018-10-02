@@ -601,7 +601,7 @@ function controlMobile(event,down)
 		if (gameStarted)
 		{
 			var fromLeft = true;
-			if (!vertical && isMobile && gameStarted) fromLeft = (mx < windowHeight / 2);
+			if (!vertical && isMobile) fromLeft = (mx > windowHeight / 2);
 			else fromLeft = (my < windowWidth / 2);
 			
 			MOUSEY = windowHeight-px;
