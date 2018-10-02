@@ -7,6 +7,9 @@
 	<link rel="shortcut icon" href="htdocs/icon.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<script>
+		screen.orientation.lock();
+		screen.lockOrientation("orientation");
+	
 		function openFullscreen() {
 		  if (document.body.requestFullscreen) {
 			document.body.requestFullscreen();
@@ -915,7 +918,7 @@ function update(time)
 			//SHARK[i][0] = (FX + vel*COS*deltaTime) * SOFT + SHARKTO[i][0] * (1-SOFT);
 			//SHARK[i][1] = (FY + vel*SIN*deltaTime) * SOFT + SHARKTO[i][1] * (1-SOFT);
 			SHARK[i][3] = VEL * SOFT + SHARKTO[i][2] * (1-SOFT);
-			SHARK[i][4] = dir * SOFT + SHARKTO[i][3] * (1-SOFT);
+			SHARK[i][4] = dir * (3*SOFT-2) + SHARKTO[i][3] * (3-SOFT*3);
 			SHARK[i][5] = SHARK[i][5] * SOFT + SHARKTO[i][4] * (1-SOFT);
 						
 			if (FY > SIZE * 5.9)
