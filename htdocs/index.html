@@ -494,18 +494,17 @@ function resize() {
     HEIGHT = window.innerHeight;
 	
 	vertical = (WIDTH<HEIGHT && isMobile);
+	alert(window.screen.orientation);
+	
 	if (vertical)
 	{
-		/*if (window.screen.orientation == 0 || window.screen.orientation == 180) || !gameStarted
-		{
-			var temp = HEIGHT;
-			HEIGHT = WIDTH;
-			WIDTH = temp;
-		}*/
-		
 		var temp = HEIGHT;
 		HEIGHT = WIDTH;
 		WIDTH = temp;
+		
+		/*var temp = HEIGHT;
+		HEIGHT = WIDTH;
+		WIDTH = temp;*/
 		
 		document.body.style.transform = "rotate(90deg)";
 		document.body.style.top = "-"+(HEIGHT)+"px";
@@ -1143,15 +1142,6 @@ function update(time)
 		face();
 		
 		sendPlayerData();
-		
-		C.lineStyle(2, 0xFFF000);
-		C.beginFill(0x880000, 1);
-		C.drawRect(WIDTH-100, HEIGHT-100, 100, 100);
-		C.drawRect(WIDTH-100, 0, 100, 100);
-		C.drawRect(0, HEIGHT-100, 100, 100);
-		C.drawRect(0, 0, 100, 100);
-		C.drawRect(WIDTH/2-50, HEIGHT/2-50, 100, 100);
-		C.endFill();
 	}
 	else
 	{
