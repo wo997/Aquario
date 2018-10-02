@@ -6,8 +6,9 @@
 	<link href="https://fonts.googleapis.com/css?family=Baloo" rel="stylesheet">
 	<link rel="shortcut icon" href="htdocs/icon.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<script>	
+	<script>
 		function openFullscreen() {
+		  resize();
 		  if (document.body.requestFullscreen) {
 			document.body.requestFullscreen();
 		  } else if (document.body.mozRequestFullScreen) { /* Firefox */
@@ -495,9 +496,12 @@ function resize() {
 	vertical = (WIDTH<HEIGHT && isMobile);
 	if (vertical)
 	{
-		var temp = HEIGHT;
-		HEIGHT = WIDTH;
-		WIDTH = temp;
+		if ((window.screen.orientation == 90 || window.screen.orientation == -90) && !gameStarted)
+		{
+			var temp = HEIGHT;
+			HEIGHT = WIDTH;
+			WIDTH = temp;
+		}
 		
 		document.body.style.transform = "rotate(90deg)";
 		document.body.style.top = "-"+(HEIGHT)+"px";
