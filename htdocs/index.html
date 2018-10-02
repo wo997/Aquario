@@ -493,8 +493,6 @@ function resize() {
     WIDTH = window.innerWidth;
     HEIGHT = window.innerHeight;
 	
-	alert(WIDTH+" - "+HEIGHT);
-	
 	vertical = (WIDTH<HEIGHT && isMobile);
 	
 	if (vertical)
@@ -539,6 +537,8 @@ function resize() {
 	
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
+	
+	alert(canvas.width+" - "+canvas.height);
 	
 	this.renderer.resize(WIDTH, HEIGHT);
 	
