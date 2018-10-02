@@ -496,7 +496,7 @@ function resize() {
 	vertical = (WIDTH<HEIGHT && isMobile);
 	if (vertical)
 	{
-		if ((window.screen.orientation == 90 || window.screen.orientation == -90) || !gameStarted)
+		if ((window.screen.orientation == 0 || window.screen.orientation == 180) || !gameStarted)
 		{
 			var temp = HEIGHT;
 			HEIGHT = WIDTH;
@@ -546,7 +546,7 @@ function resize() {
 	
 	var conq = canvas.getBoundingClientRect();
 	
-	if ((window.screen.orientation == 90 || window.screen.orientation == -90) || !gameStarted)
+	if ((window.screen.orientation == 0 || window.screen.orientation == 180) || !gameStarted)
 	{
 		ele.style.left = Math.round(WIDTH/2-173)+conq.top+"px";
 	}
