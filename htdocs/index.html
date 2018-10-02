@@ -6,9 +6,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Baloo" rel="stylesheet">
 	<link rel="shortcut icon" href="htdocs/icon.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<script>
-		screen.orientation.lock("natural");
-	
+	<script>	
 		function openFullscreen() {
 		  if (document.body.requestFullscreen) {
 			document.body.requestFullscreen();
@@ -495,6 +493,7 @@ function resize() {
     HEIGHT = window.innerHeight;
 	
 	vertical = (WIDTH<HEIGHT && isMobile);
+	vertical = true;
 	if (vertical)
 	{
 		var temp = HEIGHT;
