@@ -600,7 +600,13 @@ function controlMobile(event,down)
 		var my = event.touches[i].pageY*SCALE;
 		if (gameStarted)
 		{
-			if (my < windowWidth / 2) moveMouseTo(mx,my,false);
+			var fromLeft = true;
+			if (!vertical && isMobile && gameStarted) fromLeft = (mx < windowHeight / 2);
+			else fromLeft = (my < windowWidth / 2);
+			
+			MOUSEY = windowHeight-px;
+			MOUSEX = py;
+			if (fromLeft) moveMouseTo(mx,my,false);
 			else LMB = true;
 		}
 		else
