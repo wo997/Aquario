@@ -602,7 +602,7 @@ function controlMobile(event,down)
 		{			
 			if (!vertical && isMobile)
 			{
-				if (mx > windowHeight / 2) moveMouseTo(mx,my,false);
+				if (mx < windowHeight / 2) moveMouseTo(mx,my,false);
 				else LMB = true;
 			}
 			else
