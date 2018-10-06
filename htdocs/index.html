@@ -932,7 +932,7 @@ function update(time)
 			//SHARK[i][0] = (FX + vel*COS*deltaTime) * SOFT + SHARKTO[i][0] * (1-SOFT);
 			//SHARK[i][1] = (FY + vel*SIN*deltaTime) * SOFT + SHARKTO[i][1] * (1-SOFT);
 			SHARK[i][3] = VEL * SOFT + SHARKTO[i][2] * (1-SOFT);
-			SHARK[i][4] = dir * (3*SOFT-2) + SHARKTO[i][3] * (3-SOFT*3);
+			SHARK[i][4] = dir * (2*SOFT-1) + SHARKTO[i][3] * (2-SOFT*2);
 			SHARK[i][5] = SHARK[i][5] * SOFT + SHARKTO[i][4] * (1-SOFT);
 						
 			if (FY > SIZE * 5.9)
@@ -1015,7 +1015,7 @@ function update(time)
 			FISH[i][0] = FX * SOFT + POSTO[i][0] * (1-SOFT);
 			FISH[i][1] = FY * SOFT + POSTO[i][1] * (1-SOFT);
 			FISH[i][3] = VEL * SOFT + POSTO[i][2] * (1-SOFT);
-			FISH[i][4] = dir * (3*SOFT-2) + POSTO[i][3] * (3-SOFT*3);
+			FISH[i][4] = dir * (2*SOFT-1) + POSTO[i][3] * (2-SOFT*2);
 			FISH[i][2] = fish[2] * SOFT + POSTO[i][4] * (1-SOFT);
 			
 			var mouthX = FX + COS*SIZE*18;
