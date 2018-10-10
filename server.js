@@ -384,6 +384,27 @@ function getSize(s)
 var orderbotcounter = 0;
 function HANDLEGAME()
 {
+	PLAYERS.data = FISH;
+	SENDSHARKS.data = SHARK;
+	var BOAT = {
+		x: boatX,
+		vx: boatVX,
+		tx: boatTargetX,
+		//wt: boatWaitTarget,
+		//s: boatStop,
+		ru: rodUp,
+		hx: hookX,
+		hy: hookY,
+		hvx: hookVX,
+		hvy: hookVY,
+		vl: veinLen
+	};
+	
+	var d = new Date();
+	var startAt = 1000*d.getSeconds()+d.getMilliseconds();
+	
+	io.emit('updatePlayers',PLAYERS,SENDSHARKS,BOAT,huntId,startAt);
+		
 	TIME++;
 	
 	var whereGoes = (boatVX>0?-1:1);
@@ -828,34 +849,20 @@ function HANDLEGAME()
 		if (Math.abs(Math.sin(SHARK[i][5]))<0.1) SHARK[i][5]+=(2*Math.round(Math.random())-1)*0.6;
 	}
 	
-	PLAYERS.data = FISH;
-	SENDSHARKS.data = SHARK;
-	var BOAT = {
-		x: boatX,
-		vx: boatVX,
-		tx: boatTargetX,
-		//wt: boatWaitTarget,
-		//s: boatStop,
-		ru: rodUp,
-		hx: hookX,
-		hy: hookY,
-		hvx: hookVX,
-		hvy: hookVY,
-		vl: veinLen
-	};
-	
 	var d = new Date();
 	var delay = 1000*d.getSeconds()+d.getMilliseconds();
-	
+	var frameLength = mod(delay-startAt,60);
+	lastDelay = delay;
 	/*if (once<1) once++;
 	else
 	{
 		once = 0;
 		io.emit('updatePlayers',PLAYERS,SENDSHARKS,delay);
 	}*/
-	io.emit('updatePlayers',PLAYERS,SENDSHARKS,BOAT,huntId,delay);
 	
-	setTimeout(HANDLEGAME,1000/30);
+	var wait = 1000/30-frameLength;
+	if (wait<0) wait = 0;
+	setTimeout(HANDLEGAME,wait);
 }
 
 //var once = 0; // skip 1/2
