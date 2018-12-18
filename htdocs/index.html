@@ -871,7 +871,7 @@ function update(time)
 	window.scrollTo(0,0);
 	
     if (lastTime) {
-        deltaTime = deltaTime*0.5+(time - lastTime)/33.4;
+        deltaTime = (time - lastTime)/16.66;
 		if (deltaTime>3) deltaTime = 3;
     }
     lastTime = time;
@@ -892,10 +892,10 @@ function update(time)
 		}
 		else
 		{
-			SOFT = Math.pow(0.9,deltaTime);
+			SOFT = Math.pow(0.85,deltaTime);
 			control();
 			
-			if (POSTO[PLAYERID][0]==0 || TIME-lastUpdate>300)
+			if (POSTO[PLAYERID][0]==0 || TIME-lastUpdate>500)
 			{
 				RELOAD();
 			}
@@ -2054,7 +2054,7 @@ function startSocket()
 			POSTO[i][3] = dir + timeAhead*turn/(10+2*SIZE);
 			
 			if (FISH[i][8] != fis.data[i][8]) // new fish in - different name
-			{				
+			{
 				FISH[i][0] = POSTO[i][0];
 				FISH[i][1] = POSTO[i][1];
 				FISH[i][3] = POSTO[i][2];
